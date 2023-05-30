@@ -10,12 +10,8 @@ import (
 
 func TestCreateDesly(t *testing.T) {
 	var randomRedirect = util.RandomString(10)
-	var randomDesly = util.RandomString(6)
 
-	desly, err := testQueries.CreateDesly(context.Background(), CreateDeslyParams{
-		Redirect: randomRedirect,
-		Desly: randomDesly,
-	})
+	desly, err := testQueries.CreateDesly(context.Background(), randomRedirect)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, desly)
@@ -27,14 +23,10 @@ func TestCreateDesly(t *testing.T) {
 	require.NotEmpty(t, desly.Desly)
 }
 
-func TestGetDesly(t *testing.T) {
+/* func TestGetDesly(t *testing.T) {
 	var randomRedirect = util.RandomString(10)
-	var randomDesly = util.RandomString(6)
 
-	createdDesly, errCreate := testQueries.CreateDesly(context.Background(), CreateDeslyParams{
-		Redirect: randomRedirect,
-		Desly: randomDesly,
-	})
+	createdDesly, errCreate := testQueries.CreateDesly(context.Background(), randomRedirect)
 
 	require.NoError(t, errCreate)
 	require.NotEmpty(t, createdDesly)
@@ -49,21 +41,17 @@ func TestGetDesly(t *testing.T) {
 
 	require.NotEmpty(t, desly.Redirect)
 	require.NotEmpty(t, desly.Desly)
-}
+} */
 
-func TestGetRedirectByDesly(t *testing.T) {
+func TestGetDeslyByDesly(t *testing.T) {
 	var randomRedirect = util.RandomString(10)
-	var randomDesly = util.RandomString(6)
 
-	createdDesly, errCreate := testQueries.CreateDesly(context.Background(), CreateDeslyParams{
-		Redirect: randomRedirect,
-		Desly: randomDesly,
-	})
+	createdDesly, errCreate := testQueries.CreateDesly(context.Background(), randomRedirect)
 
 	require.NoError(t, errCreate)
 	require.NotEmpty(t, createdDesly)
 
-	desly, err := testQueries.GetRedirectByDesly(context.Background(), createdDesly.Desly)
+	desly, err := testQueries.GetDeslyByDesly(context.Background(), createdDesly.Desly)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, desly)
