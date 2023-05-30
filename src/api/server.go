@@ -15,8 +15,9 @@ func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 	router := gin.Default()
 
-	router.POST("/api/deslfy", server.createDesly)
-	router.GET("/api/desly/:desly", server.getDeslyByDesly)
+	router.POST("/api/desly", server.createDesly)
+	router.GET("/api/desly/:desly", server.getDesly)
+	router.GET("/r/:desly", server.redirect)
 
 	server.router = router
 	return server

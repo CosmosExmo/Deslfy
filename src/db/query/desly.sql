@@ -9,7 +9,7 @@ FROM deslies
 WHERE id = $1
 LIMIT 1; */
 
--- name: GetDeslyByDesly :one
+-- name: GetDesly :one
 SELECT *
 FROM deslies
 WHERE desly = $1

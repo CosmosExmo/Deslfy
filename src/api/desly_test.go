@@ -31,7 +31,7 @@ func TestGetDeslyByDesly(t *testing.T) {
 			desly: desly.Desly,
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetDeslyByDesly(gomock.Any(), gomock.Eq(desly.Desly)).
+					GetDesly(gomock.Any(), gomock.Eq(desly.Desly)).
 					Times(1).Return(desly, nil)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -44,7 +44,7 @@ func TestGetDeslyByDesly(t *testing.T) {
 			desly: desly.Desly,
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetDeslyByDesly(gomock.Any(), gomock.Eq(desly.Desly)).
+					GetDesly(gomock.Any(), gomock.Eq(desly.Desly)).
 					Times(1).Return(db.Desly{}, sql.ErrNoRows)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -56,7 +56,7 @@ func TestGetDeslyByDesly(t *testing.T) {
 			desly: "0",
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetDeslyByDesly(gomock.Any(), gomock.Any()).
+					GetDesly(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -68,7 +68,7 @@ func TestGetDeslyByDesly(t *testing.T) {
 			desly: desly.Desly,
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetDeslyByDesly(gomock.Any(), desly.Desly).
+					GetDesly(gomock.Any(), desly.Desly).
 					Times(1).Return(db.Desly{}, sql.ErrConnDone)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -91,6 +91,88 @@ func TestGetDeslyByDesly(t *testing.T) {
 			recorder := httptest.NewRecorder()
 
 			url := fmt.Sprintf("/api/desly/%s", tc.desly)
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			require.NoError(t, err)
+
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(recorder)
+		})
+	}
+}
+
+func TestRedirect(t *testing.T) {
+	desly := randomDesly()
+
+	testCases := []struct {
+		name          string
+		desly         string
+		buildStubs    func(store *mockdb.MockStore)
+		checkResponse func(recoder *httptest.ResponseRecorder)
+	}{
+		{
+			name:  "OK",
+			desly: desly.Desly,
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetDesly(gomock.Any(), gomock.Eq(desly.Desly)).
+					Times(1).Return(desly, nil)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusTemporaryRedirect, recorder.Code)
+			},
+		},
+		{
+			name:  "NotFound",
+			desly: desly.Desly,
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetDesly(gomock.Any(), gomock.Eq(desly.Desly)).
+					Times(1).Return(db.Desly{}, sql.ErrNoRows)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusNotFound, recorder.Code)
+			},
+		},
+		{
+			name:  "BadRequest",
+			desly: "0",
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetDesly(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name:  "InternalServerError",
+			desly: desly.Desly,
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetDesly(gomock.Any(), desly.Desly).
+					Times(1).Return(db.Desly{}, sql.ErrConnDone)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+	}
+
+	for i := range testCases {
+		tc := testCases[i]
+
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			store := mockdb.NewMockStore(ctrl)
+			tc.buildStubs(store)
+
+			server := newTestServer(t, store)
+			recorder := httptest.NewRecorder()
+
+			url := fmt.Sprintf("/r/%s", tc.desly)
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 

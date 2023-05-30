@@ -28,7 +28,7 @@ func (q *Queries) CreateDesly(ctx context.Context, redirect string) (Desly, erro
 	return i, err
 }
 
-const getDeslyByDesly = `-- name: GetDeslyByDesly :one
+const getDesly = `-- name: GetDesly :one
 /* -- name: GetDesly :one
 SELECT *
 FROM deslies
@@ -41,8 +41,8 @@ WHERE desly = $1
 LIMIT 1
 `
 
-func (q *Queries) GetDeslyByDesly(ctx context.Context, desly string) (Desly, error) {
-	row := q.db.QueryRowContext(ctx, getDeslyByDesly, desly)
+func (q *Queries) GetDesly(ctx context.Context, desly string) (Desly, error) {
+	row := q.db.QueryRowContext(ctx, getDesly, desly)
 	var i Desly
 	err := row.Scan(
 		&i.ID,
