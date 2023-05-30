@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"desly/util"
 	"fmt"
 )
 
@@ -58,13 +57,7 @@ func (store *SQLStore) CreateDeslyTx(ctx context.Context, arg CreateDeslyTxParam
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
 
-		//get unique desly
-		var desly = util.RandomString(6)
-
-		result, err = q.CreateDesly(ctx, CreateDeslyParams{
-			Redirect: arg.Redirect,
-			Desly:  desly,
-		})
+		result, err = q.CreateDesly(ctx, arg.Redirect)
 
 		if err != nil {
 			return err
