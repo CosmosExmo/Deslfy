@@ -10,7 +10,7 @@ import (
 
 type Querier interface {
 	CreateDesly(ctx context.Context, redirect string) (Desly, error)
-	GetDeslyByDesly(ctx context.Context, desly string) (Desly, error)
+	GetDesly(ctx context.Context, desly string) (Desly, error)
 }
 
 var _ Querier = (*Queries)(nil)

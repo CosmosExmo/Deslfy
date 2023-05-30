@@ -66,7 +66,7 @@ func (mr *MockStoreMockRecorder) CreateDeslyTx(arg0, arg1 interface{}) *gomock.C
 }
 
 // GetDesly mocks base method.
-func (m *MockStore) GetDesly(arg0 context.Context, arg1 int32) (db.Desly, error) {
+func (m *MockStore) GetDesly(arg0 context.Context, arg1 string) (db.Desly, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDesly", arg0, arg1)
 	ret0, _ := ret[0].(db.Desly)
@@ -78,19 +78,4 @@ func (m *MockStore) GetDesly(arg0 context.Context, arg1 int32) (db.Desly, error)
 func (mr *MockStoreMockRecorder) GetDesly(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDesly", reflect.TypeOf((*MockStore)(nil).GetDesly), arg0, arg1)
-}
-
-// GetDeslyByDesly mocks base method.
-func (m *MockStore) GetDeslyByDesly(arg0 context.Context, arg1 string) (db.Desly, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDeslyByDesly", arg0, arg1)
-	ret0, _ := ret[0].(db.Desly)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetDeslyByDesly indicates an expected call of GetDeslyByDesly.
-func (mr *MockStoreMockRecorder) GetDeslyByDesly(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDeslyByDesly", reflect.TypeOf((*MockStore)(nil).GetDeslyByDesly), arg0, arg1)
 }

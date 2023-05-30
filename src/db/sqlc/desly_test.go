@@ -43,7 +43,7 @@ func TestCreateDesly(t *testing.T) {
 	require.NotEmpty(t, desly.Desly)
 } */
 
-func TestGetDeslyByDesly(t *testing.T) {
+func TestGetDesly(t *testing.T) {
 	var randomRedirect = util.RandomString(10)
 
 	createdDesly, errCreate := testQueries.CreateDesly(context.Background(), randomRedirect)
@@ -51,7 +51,7 @@ func TestGetDeslyByDesly(t *testing.T) {
 	require.NoError(t, errCreate)
 	require.NotEmpty(t, createdDesly)
 
-	desly, err := testQueries.GetDeslyByDesly(context.Background(), createdDesly.Desly)
+	desly, err := testQueries.GetDesly(context.Background(), createdDesly.Desly)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, desly)
