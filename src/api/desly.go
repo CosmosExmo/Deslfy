@@ -8,7 +8,7 @@ import (
 )
 
 type createDeslyRequest struct {
-	Redirect string `json:"redirect" binding:"required,len=15"`
+	Redirect string `json:"redirect" binding:"required,min=15"`
 }
 
 func (server *Server) createDesly(ctx *gin.Context) {
