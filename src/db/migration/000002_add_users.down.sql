@@ -1,0 +1,7 @@
+ALTER TABLE IF EXISTS "users" DROP CONSTRAINT IF EXISTS "owner_redirect_key";
+
+ALTER TABLE IF EXISTS "deslies" DROP CONSTRAINT IF EXISTS "deslies_owner_fkey";
+
+ALTER TABLE IF EXISTS "deslies" DROP IF EXISTS "owner";
+
+DROP TABLE IF EXISTS "users";
