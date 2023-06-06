@@ -9,9 +9,15 @@ import (
 )
 
 func TestCreateDesly(t *testing.T) {
+	account := createRandomUser(t)
 	var randomRedirect = util.RandomString(10)
 
-	desly, err := testQueries.CreateDesly(context.Background(), randomRedirect)
+	arg := CreateDeslyParams{
+		Redirect: randomRedirect,
+		Owner:    account.Username,
+	}
+
+	desly, err := testQueries.CreateDesly(context.Background(), arg)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, desly)
@@ -23,35 +29,25 @@ func TestCreateDesly(t *testing.T) {
 	require.NotEmpty(t, desly.Desly)
 }
 
-/* func TestGetDesly(t *testing.T) {
-	var randomRedirect = util.RandomString(10)
-
-	createdDesly, errCreate := testQueries.CreateDesly(context.Background(), randomRedirect)
-
-	require.NoError(t, errCreate)
-	require.NotEmpty(t, createdDesly)
-
-	desly, err := testQueries.GetDesly(context.Background(), createdDesly.ID)
-
-	require.NoError(t, err)
-	require.NotEmpty(t, desly)
-
-	require.NotZero(t, desly.ID)
-	require.NotZero(t, desly.CreatedAt)
-
-	require.NotEmpty(t, desly.Redirect)
-	require.NotEmpty(t, desly.Desly)
-} */
-
 func TestGetDesly(t *testing.T) {
+	account := createRandomUser(t)
 	var randomRedirect = util.RandomString(10)
 
-	createdDesly, errCreate := testQueries.CreateDesly(context.Background(), randomRedirect)
+	arg := CreateDeslyParams{
+		Redirect: randomRedirect,
+		Owner:    account.Username,
+	}
+
+	createdDesly, errCreate := testQueries.CreateDesly(context.Background(), arg)
 
 	require.NoError(t, errCreate)
 	require.NotEmpty(t, createdDesly)
 
-	desly, err := testQueries.GetDesly(context.Background(), createdDesly.Desly)
+	getArg := GetDeslyParams{
+		Desly: createdDesly.Desly,
+		Owner: account.Username,
+	}
+	desly, err := testQueries.GetDesly(context.Background(), getArg)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, desly)
@@ -61,4 +57,24 @@ func TestGetDesly(t *testing.T) {
 
 	require.NotEmpty(t, desly.Redirect)
 	require.NotEmpty(t, desly.Desly)
+}
+
+func TestGetRedirectByDesly(t *testing.T) {
+	account := createRandomUser(t)
+	var randomRedirect = util.RandomString(10)
+
+	arg := CreateDeslyParams{
+		Redirect: randomRedirect,
+		Owner:    account.Username,
+	}
+
+	createdDesly, errCreate := testQueries.CreateDesly(context.Background(), arg)
+
+	require.NoError(t, errCreate)
+	require.NotEmpty(t, createdDesly)
+
+	redirect, err := testQueries.GetRedirectByDesly(context.Background(), createdDesly.Desly)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, redirect)
 }

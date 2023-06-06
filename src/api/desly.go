@@ -2,6 +2,8 @@ package api
 
 import (
 	"database/sql"
+	db "desly/db/sqlc"
+	"desly/token"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +20,14 @@ func (server *Server) createDesly(ctx *gin.Context) {
 		return
 	}
 
-	desly, err := server.store.CreateDesly(ctx, req.Redirect)
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+
+	arg := db.CreateDeslyParams{
+		Redirect: req.Redirect,
+		Owner:    authPayload.Username,
+	}
+
+	desly, err := server.store.CreateDesly(ctx, arg)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
@@ -39,7 +48,14 @@ func (server *Server) getDesly(ctx *gin.Context) {
 		return
 	}
 
-	desly, err := server.store.GetDesly(ctx, req.Desly)
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+
+	arg := db.GetDeslyParams{
+		Desly: req.Desly,
+		Owner: authPayload.Username,
+	}
+
+	desly, err := server.store.GetDesly(ctx, arg)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -65,7 +81,7 @@ func (server *Server) redirect(ctx *gin.Context) {
 		return
 	}
 
-	desly, err := server.store.GetDesly(ctx, req.Desly)
+	redirect, err := server.store.GetRedirectByDesly(ctx, req.Desly)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -77,5 +93,5 @@ func (server *Server) redirect(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Redirect(http.StatusTemporaryRedirect, desly.Redirect)
+	ctx.Redirect(http.StatusTemporaryRedirect, redirect)
 }

@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"math/rand"
 	"strings"
 )
@@ -23,4 +24,8 @@ func RandomString(length int) string {
 //Random Int generates a random int between min and max
 func RandomInt(min, max int32) int32 {
 	return min + rand.Int31n(max-min + 1)
+}
+
+func RandomEmail() string {
+	return fmt.Sprintf("%s@email.com", RandomString(10))
 }
