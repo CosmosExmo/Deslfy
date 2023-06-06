@@ -16,15 +16,15 @@ type SQLStore struct {
 	db *sql.DB
 }
 
-//Store provides all functions to execute db queries and transactions
+// Store provides all functions to execute db queries and transactions
 func NewStore(db *sql.DB) Store {
 	return &SQLStore{
 		Queries: New(db),
-		db: db,
+		db:      db,
 	}
 }
 
-//Execute a db transaction
+// Execute a db transaction
 func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	tx, err := store.db.BeginTx(ctx, nil)
 
@@ -49,6 +49,7 @@ func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) erro
 
 type CreateDeslyTxParams struct {
 	Redirect string `json:"redirect"`
+	Owner    string `json:"owner"`
 }
 
 func (store *SQLStore) CreateDeslyTx(ctx context.Context, arg CreateDeslyTxParams) (Desly, error) {
@@ -57,7 +58,9 @@ func (store *SQLStore) CreateDeslyTx(ctx context.Context, arg CreateDeslyTxParam
 	err := store.execTx(ctx, func(q *Queries) error {
 		var err error
 
-		result, err = q.CreateDesly(ctx, arg.Redirect)
+		params := CreateDeslyParams(arg)
+
+		result, err = q.CreateDesly(ctx, params)
 
 		if err != nil {
 			return err

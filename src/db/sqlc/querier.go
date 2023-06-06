@@ -9,8 +9,11 @@ import (
 )
 
 type Querier interface {
-	CreateDesly(ctx context.Context, redirect string) (Desly, error)
-	GetDesly(ctx context.Context, desly string) (Desly, error)
+	CreateDesly(ctx context.Context, arg CreateDeslyParams) (Desly, error)
+	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	GetDesly(ctx context.Context, arg GetDeslyParams) (Desly, error)
+	GetRedirectByDesly(ctx context.Context, desly string) (string, error)
+	GetUser(ctx context.Context, username string) (User, error)
 }
 
 var _ Querier = (*Queries)(nil)

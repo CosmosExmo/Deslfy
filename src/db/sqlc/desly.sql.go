@@ -10,13 +10,18 @@ import (
 )
 
 const createDesly = `-- name: CreateDesly :one
-INSERT INTO deslies (redirect, desly)
-VALUES ($1, substr(gen_random_uuid()::text, 1, 6))
-RETURNING id, redirect, desly, clicked, created_at
+INSERT INTO deslies (redirect, desly, owner)
+VALUES ($1, substr(gen_random_uuid()::text, 1, 6), $2)
+RETURNING id, redirect, desly, clicked, created_at, owner
 `
 
-func (q *Queries) CreateDesly(ctx context.Context, redirect string) (Desly, error) {
-	row := q.db.QueryRowContext(ctx, createDesly, redirect)
+type CreateDeslyParams struct {
+	Redirect string `json:"redirect"`
+	Owner    string `json:"owner"`
+}
+
+func (q *Queries) CreateDesly(ctx context.Context, arg CreateDeslyParams) (Desly, error) {
+	row := q.db.QueryRowContext(ctx, createDesly, arg.Redirect, arg.Owner)
 	var i Desly
 	err := row.Scan(
 		&i.ID,
@@ -24,6 +29,7 @@ func (q *Queries) CreateDesly(ctx context.Context, redirect string) (Desly, erro
 		&i.Desly,
 		&i.Clicked,
 		&i.CreatedAt,
+		&i.Owner,
 	)
 	return i, err
 }
@@ -35,14 +41,19 @@ FROM deslies
 WHERE id = $1
 LIMIT 1; */
 
-SELECT id, redirect, desly, clicked, created_at
+SELECT id, redirect, desly, clicked, created_at, owner
 FROM deslies
-WHERE desly = $1
+WHERE desly = $1 AND owner = $2
 LIMIT 1
 `
 
-func (q *Queries) GetDesly(ctx context.Context, desly string) (Desly, error) {
-	row := q.db.QueryRowContext(ctx, getDesly, desly)
+type GetDeslyParams struct {
+	Desly string `json:"desly"`
+	Owner string `json:"owner"`
+}
+
+func (q *Queries) GetDesly(ctx context.Context, arg GetDeslyParams) (Desly, error) {
+	row := q.db.QueryRowContext(ctx, getDesly, arg.Desly, arg.Owner)
 	var i Desly
 	err := row.Scan(
 		&i.ID,
@@ -50,6 +61,21 @@ func (q *Queries) GetDesly(ctx context.Context, desly string) (Desly, error) {
 		&i.Desly,
 		&i.Clicked,
 		&i.CreatedAt,
+		&i.Owner,
 	)
 	return i, err
+}
+
+const getRedirectByDesly = `-- name: GetRedirectByDesly :one
+SELECT redirect
+FROM deslies
+WHERE desly = $1
+LIMIT 1
+`
+
+func (q *Queries) GetRedirectByDesly(ctx context.Context, desly string) (string, error) {
+	row := q.db.QueryRowContext(ctx, getRedirectByDesly, desly)
+	var redirect string
+	err := row.Scan(&redirect)
+	return redirect, err
 }

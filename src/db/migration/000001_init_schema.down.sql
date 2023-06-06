@@ -1,1 +1,3 @@
 DROP TABLE IF EXISTS "deslies";
+
+DROP EXTENSION IF EXISTS pgcrypto;
