@@ -13,6 +13,8 @@ db_create:
     POSTGRES_USER: root
     POSTGRES_PASSWORD: secret
     POSTGRES_HOST_AUTH_METHOD: trust
+  before_script:
+    - apk add --update curl && rm -rf /var/cache/apk/*
   script:
     - echo "Database service started"
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.1/migrate.linux-amd64.tar.gz | tar xvz
