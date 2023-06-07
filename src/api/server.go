@@ -41,6 +41,11 @@ func (server *Server) setupRouter() {
 	authRoutes.POST("/api/desly", server.createDesly)
 	authRoutes.GET("/api/desly/:desly", server.getDesly)
 
+	authRoutes.POST("/api/token", server.createUserToken)
+	authRoutes.POST("/api/token/delete", server.deleteUserToken)
+	authRoutes.GET("/api/token/:id", server.getUserToken)
+	authRoutes.GET("/api/token", server.getUserTokens)
+
 	server.router = router
 }
 

@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestCreateUser(t *testing.T) {
+func TestCreateUserAPI(t *testing.T) {
 	user, password := randomUser(t)
 
 	testCases := []struct {
@@ -29,7 +29,7 @@ func TestCreateUser(t *testing.T) {
 		{
 			name: "OK",
 			body: gin.H{
-				"username":  user.Email,
+				"username":  user.Username,
 				"password":  password,
 				"full_name": user.FullName,
 				"email":     user.Email,
@@ -61,7 +61,7 @@ func TestCreateUser(t *testing.T) {
 		{
 			name: "InternalServerError",
 			body: gin.H{
-				"username":  user.Email,
+				"username":  user.Username,
 				"password":  password,
 				"full_name": user.FullName,
 				"email":     user.Email,

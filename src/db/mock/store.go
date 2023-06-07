@@ -80,6 +80,35 @@ func (mr *MockStoreMockRecorder) CreateUser(arg0, arg1 interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockStore)(nil).CreateUser), arg0, arg1)
 }
 
+// CreateUserToken mocks base method.
+func (m *MockStore) CreateUserToken(arg0 context.Context, arg1 db.CreateUserTokenParams) (db.UserToken, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateUserToken", arg0, arg1)
+	ret0, _ := ret[0].(db.UserToken)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateUserToken indicates an expected call of CreateUserToken.
+func (mr *MockStoreMockRecorder) CreateUserToken(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUserToken", reflect.TypeOf((*MockStore)(nil).CreateUserToken), arg0, arg1)
+}
+
+// DeleteUserToken mocks base method.
+func (m *MockStore) DeleteUserToken(arg0 context.Context, arg1 db.DeleteUserTokenParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteUserToken", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteUserToken indicates an expected call of DeleteUserToken.
+func (mr *MockStoreMockRecorder) DeleteUserToken(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUserToken", reflect.TypeOf((*MockStore)(nil).DeleteUserToken), arg0, arg1)
+}
+
 // GetDesly mocks base method.
 func (m *MockStore) GetDesly(arg0 context.Context, arg1 db.GetDeslyParams) (db.Desly, error) {
 	m.ctrl.T.Helper()
@@ -123,4 +152,34 @@ func (m *MockStore) GetUser(arg0 context.Context, arg1 string) (db.User, error) 
 func (mr *MockStoreMockRecorder) GetUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockStore)(nil).GetUser), arg0, arg1)
+}
+
+// GetUserToken mocks base method.
+func (m *MockStore) GetUserToken(arg0 context.Context, arg1 db.GetUserTokenParams) (db.UserToken, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserToken", arg0, arg1)
+	ret0, _ := ret[0].(db.UserToken)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserToken indicates an expected call of GetUserToken.
+func (mr *MockStoreMockRecorder) GetUserToken(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserToken", reflect.TypeOf((*MockStore)(nil).GetUserToken), arg0, arg1)
+}
+
+// GetUserTokens mocks base method.
+func (m *MockStore) GetUserTokens(arg0 context.Context, arg1 string) ([]db.UserToken, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserTokens", arg0, arg1)
+	ret0, _ := ret[0].([]db.UserToken)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserTokens indicates an expected call of GetUserTokens.
+func (mr *MockStoreMockRecorder) GetUserTokens(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserTokens", reflect.TypeOf((*MockStore)(nil).GetUserTokens), arg0, arg1)
 }
