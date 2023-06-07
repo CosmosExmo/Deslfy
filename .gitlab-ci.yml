@@ -17,7 +17,7 @@ db_create:
     - apk add --update curl && rm -rf /var/cache/apk/*
   script:
     - echo "Database service started"
-    - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.1/migrate.linux-amd64.tar.gz | tar xvz
+    - curl -L https://github.com/golang-migrate/migrate/releases/download/$version/migrate.$os-$arch.tar.gz | tar xvz
     - mv migrate.linux-amd64 /usr/bin/migrate
     - which migrate
     - make migrateup
