@@ -33,4 +33,6 @@ run_tests:
     - job: db_create
   script:
     - make test
+  tags:
+    - deploy-runner
   when: manual
