@@ -18,7 +18,7 @@ db_create:
   script:
     - echo "Database service started"
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.1/migrate.linux-amd64.tar.gz | tar xvz
-    - sudo mv migrate.linux-amd64 /usr/bin/migrate
+    - mv migrate.linux-amd64 /usr/bin/migrate
     - which migrate
     - make migrateup
   tags:
