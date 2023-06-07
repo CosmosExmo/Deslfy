@@ -20,6 +20,7 @@ db_create:
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.1/migrate.linux-amd64.tar.gz | tar xvz
     - mv migrate /usr/bin/migrate
     - which migrate
+    - ls -a
     - make migrateup
   tags:
     - deploy-runner
