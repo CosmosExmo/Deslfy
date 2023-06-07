@@ -13,6 +13,8 @@ db_create:
     POSTGRES_DB: root
     POSTGRES_USER: secret
     POSTGRES_PASSWORD: deslfy
+  script:
+    - echo "Database service started"
   tags:
     - deploy-runner
   when: manual
@@ -22,7 +24,7 @@ db_migration:
   needs:
     - job: db_create
   services:
-    - alpine:latest
+    - postgres:latest
   script:
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.1/migrate.linux-amd64.tar.gz | tar xvz
     - sudo mv migrate.linux-amd64 /usr/bin/migrate
@@ -38,5 +40,3 @@ run_tests:
   script:
     - make test
   when: manual
-
-
