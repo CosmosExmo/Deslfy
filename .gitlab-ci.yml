@@ -15,12 +15,12 @@ db_create:
     POSTGRES_HOST_AUTH_METHOD: trust
   before_script:
     - apk add --update curl && rm -rf /var/cache/apk/*
+    - apk add --no-cache make
   script:
     - echo "Database service started"
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.1/migrate.linux-amd64.tar.gz | tar xvz
     - mv migrate /usr/bin/migrate
     - which migrate
-    - ls -a
     - make migrateup
   tags:
     - deploy-runner
