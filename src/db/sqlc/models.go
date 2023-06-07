@@ -25,3 +25,11 @@ type User struct {
 	PasswordChangedAt time.Time `json:"password_changed_at"`
 	CreatedAt         time.Time `json:"created_at"`
 }
+
+type UserToken struct {
+	ID        int32     `json:"id"`
+	Owner     string    `json:"owner"`
+	Token     string    `json:"token"`
+	ExpireAt  time.Time `json:"expire_at"`
+	CreatedAt time.Time `json:"created_at"`
+}

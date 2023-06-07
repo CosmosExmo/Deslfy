@@ -1,5 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
-
 CREATE TABLE "deslies" (
   "id" serial PRIMARY KEY,
   "redirect" varchar NOT NULL,

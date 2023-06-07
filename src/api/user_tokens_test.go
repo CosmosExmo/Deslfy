@@ -9,7 +9,6 @@ import (
 	"desly/util"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -20,9 +19,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestCreateDeslyAPI(t *testing.T) {
+func TestCreateUserTokenAPI(t *testing.T) {
 	user, _ := randomUser(t)
-	desly := randomDesly(user.Username)
+	randomToken := randomUserToken(user.Username)
+	expireAt := randomToken.ExpireAt.Unix()
 
 	testCases := []struct {
 		name          string
@@ -34,32 +34,31 @@ func TestCreateDeslyAPI(t *testing.T) {
 		{
 			name: "OK",
 			body: gin.H{
-				"redirect": desly.Redirect,
+				"expire_at": expireAt,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					CreateDesly(gomock.Any(), gomock.Any()).
-					Times(1).Return(desly, nil)
+					CreateUserToken(gomock.Any(), gomock.Any()).
+					Times(1).Return(randomToken, nil)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
-				requireBodyMatchDesly(t, recorder.Body, desly)
 			},
 		},
 		{
 			name: "BadRequest",
 			body: gin.H{
-				"redirect": "0",
+				"expire_at": 0,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					CreateDesly(gomock.Any(), gomock.Any()).
+					CreateUserToken(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -69,15 +68,15 @@ func TestCreateDeslyAPI(t *testing.T) {
 		{
 			name: "InternalServerError",
 			body: gin.H{
-				"redirect": desly.Redirect,
+				"expire_at": expireAt,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					CreateDesly(gomock.Any(), gomock.Any()).
-					Times(1).Return(db.Desly{}, sql.ErrConnDone)
+					CreateUserToken(gomock.Any(), gomock.Any()).
+					Times(1).Return(db.UserToken{}, sql.ErrConnDone)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
@@ -100,9 +99,10 @@ func TestCreateDeslyAPI(t *testing.T) {
 
 			// Marshal body data to JSON
 			data, err := json.Marshal(tc.body)
+			fmt.Print(tc.body)
 			require.NoError(t, err)
 
-			url := "/api/desly"
+			url := "/api/token"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
 			require.NoError(t, err)
 
@@ -113,57 +113,41 @@ func TestCreateDeslyAPI(t *testing.T) {
 	}
 }
 
-func TestGetDeslyAPI(t *testing.T) {
+func TestGetUserTokenAPI(t *testing.T) {
 	user, _ := randomUser(t)
-	desly := randomDesly(user.Username)
+	randomToken := randomUserToken(user.Username)
 
 	testCases := []struct {
 		name          string
-		desly         string
+		id            int32
 		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockStore)
 		checkResponse func(recoder *httptest.ResponseRecorder)
 	}{
 		{
-			name:  "OK",
-			desly: desly.Desly,
+			name: "OK",
+			id:   randomToken.ID,
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetDesly(gomock.Any(), gomock.Any()).
-					Times(1).Return(desly, nil)
+					GetUserToken(gomock.Any(), gomock.Any()).
+					Times(1).Return(randomToken, nil)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
-				requireBodyMatchDesly(t, recorder.Body, desly)
 			},
 		},
 		{
-			name:  "NotFound",
-			desly: desly.Desly,
+			name: "BadRequest",
+			id:   0,
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetDesly(gomock.Any(), gomock.Any()).
-					Times(1).Return(db.Desly{}, sql.ErrNoRows)
-			},
-			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusNotFound, recorder.Code)
-			},
-		},
-		{
-			name:  "BadRequest",
-			desly: "0",
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
-			},
-			buildStubs: func(store *mockdb.MockStore) {
-				store.EXPECT().
-					GetDesly(gomock.Any(), gomock.Any()).
+					GetUserToken(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -171,15 +155,15 @@ func TestGetDeslyAPI(t *testing.T) {
 			},
 		},
 		{
-			name:  "InternalServerError",
-			desly: desly.Desly,
+			name: "InternalServerError",
+			id:   randomToken.ID,
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetDesly(gomock.Any(), gomock.Any()).
-					Times(1).Return(db.Desly{}, sql.ErrConnDone)
+					GetUserToken(gomock.Any(), gomock.Any()).
+					Times(1).Return(db.UserToken{}, sql.ErrConnDone)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
@@ -200,7 +184,7 @@ func TestGetDeslyAPI(t *testing.T) {
 			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/api/desly/%s", tc.desly)
+			url := fmt.Sprintf("/api/token/%d", tc.id)
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 
@@ -211,60 +195,44 @@ func TestGetDeslyAPI(t *testing.T) {
 	}
 }
 
-func TestRedirectAPI(t *testing.T) {
+func TestGetUserTokensAPI(t *testing.T) {
 	user, _ := randomUser(t)
-	desly := randomDesly(user.Username)
-	redirect := desly.Redirect
+
+	n := 5
+	userTokens := make([]db.UserToken, n)
+	for i := 0; i < n; i++ {
+		userTokens[i] = randomUserToken(user.Username)
+	}
 
 	testCases := []struct {
 		name          string
-		desly         string
+		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockStore)
 		checkResponse func(recoder *httptest.ResponseRecorder)
 	}{
 		{
-			name:  "OK",
-			desly: desly.Desly,
+			name: "OK",
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
+			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetRedirectByDesly(gomock.Any(), gomock.Any()).
-					Times(1).Return(redirect, nil)
+					GetUserTokens(gomock.Any(), gomock.Any()).
+					Times(1).Return(userTokens, nil)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusTemporaryRedirect, recorder.Code)
+				require.Equal(t, http.StatusOK, recorder.Code)
 			},
 		},
 		{
-			name:  "NotFound",
-			desly: desly.Desly,
+			name: "InternalServerError",
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
+			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetRedirectByDesly(gomock.Any(), gomock.Any()).
-					Times(1).Return("", sql.ErrNoRows)
-			},
-			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusNotFound, recorder.Code)
-			},
-		},
-		{
-			name:  "BadRequest",
-			desly: "0",
-			buildStubs: func(store *mockdb.MockStore) {
-				store.EXPECT().
-					GetRedirectByDesly(gomock.Any(), gomock.Any()).
-					Times(0)
-			},
-			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusBadRequest, recorder.Code)
-			},
-		},
-		{
-			name:  "InternalServerError",
-			desly: desly.Desly,
-			buildStubs: func(store *mockdb.MockStore) {
-				store.EXPECT().
-					GetRedirectByDesly(gomock.Any(), gomock.Any()).
-					Times(1).Return("", sql.ErrConnDone)
+					GetUserTokens(gomock.Any(), gomock.Any()).
+					Times(1).Return(userTokens, sql.ErrConnDone)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusInternalServerError, recorder.Code)
@@ -285,30 +253,116 @@ func TestRedirectAPI(t *testing.T) {
 			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/r/%s", tc.desly)
+			url := "/api/token"
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 
+			tc.setupAuth(t, request, server.tokenMaker)
 			server.router.ServeHTTP(recorder, request)
 			tc.checkResponse(recorder)
 		})
 	}
 }
 
-func randomDesly(owner string) db.Desly {
-	return db.Desly{
-		Redirect: util.RandomString(20),
-		Desly:    util.RandomString(6),
-		Owner:    owner,
+func TestDeleteUserTokensAPI(t *testing.T) {
+	user, _ := randomUser(t)
+	userToken := randomUserToken(user.Username)
+
+	testCases := []struct {
+		name          string
+		body          gin.H
+		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
+		buildStubs    func(store *mockdb.MockStore)
+		checkResponse func(recoder *httptest.ResponseRecorder)
+	}{
+		{
+			name: "OK",
+			body: gin.H{
+				"id": userToken.ID,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					DeleteUserToken(gomock.Any(), gomock.Any()).
+					Times(1)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+			},
+		},
+		{
+			name: "BadRequest",
+			body: gin.H{
+				"id": 0,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					DeleteUserToken(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name: "InternalServerError",
+			body: gin.H{
+				"id": userToken.ID,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.Username, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					DeleteUserToken(gomock.Any(), gomock.Any()).
+					Times(1).Return(sql.ErrConnDone)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
+	}
+
+	for i := range testCases {
+		tc := testCases[i]
+
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			store := mockdb.NewMockStore(ctrl)
+			tc.buildStubs(store)
+
+			server := newTestServer(t, store)
+			recorder := httptest.NewRecorder()
+
+			// Marshal body data to JSON
+			data, err := json.Marshal(tc.body)
+			fmt.Print(tc.body)
+			require.NoError(t, err)
+
+			url := "/api/token/delete"
+			request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
+			require.NoError(t, err)
+
+			tc.setupAuth(t, request, server.tokenMaker)
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(recorder)
+		})
 	}
 }
 
-func requireBodyMatchDesly(t *testing.T, body *bytes.Buffer, desly db.Desly) {
-	data, err := io.ReadAll(body)
-	require.NoError(t, err)
-
-	var gotDesly db.Desly
-	err = json.Unmarshal(data, &gotDesly)
-	require.NoError(t, err)
-	require.Equal(t, desly.Redirect, gotDesly.Redirect)
+func randomUserToken(owner string) db.UserToken {
+	return db.UserToken{
+		ID:        util.RandomInt(10, 50),
+		Owner:     owner,
+		Token:     util.RandomString(64),
+		ExpireAt:  time.Now().Add(24 * time.Hour),
+		CreatedAt: time.Now(),
+	}
 }
