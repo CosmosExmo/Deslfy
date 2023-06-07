@@ -13,6 +13,7 @@ db_create:
     POSTGRES_DB: deslfy
     POSTGRES_USER: root
     POSTGRES_PASSWORD: secret
+    POSTGRES_HOST_AUTH_METHOD: trust
   script:
     - echo "Database service started"
   tags:
