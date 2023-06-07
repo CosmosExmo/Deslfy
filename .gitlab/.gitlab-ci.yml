@@ -1,0 +1,42 @@
+image: golang:alpine
+
+stages:
+  - Create Test DB
+  - Run Migrations
+  - Run Test
+
+db_create:
+  stage: Create Test DB
+  services:
+    - postgres:latest
+  variables:
+    POSTGRES_DB: root
+    POSTGRES_USER: secret
+    POSTGRES_PASSWORD: deslfy
+  tags:
+    - deploy-runner
+  when: manual
+
+db_migration:
+  stage: Run Migrations
+  needs:
+    - job: db_create
+  services:
+    - alpine:latest
+  script:
+    - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.1/migrate.linux-amd64.tar.gz | tar xvz
+    - sudo mv migrate.linux-amd64 /usr/bin/migrate
+    - which migrate
+  tags:
+    - deploy-runner
+  when: manual
+
+run_tests:
+  stage: Run Test
+  needs:
+    - job: db_migration
+  script:
+    - make test
+  when: manual
+
+
