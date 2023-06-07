@@ -10,9 +10,9 @@ db_create:
   services:
     - postgres:latest
   variables:
-    POSTGRES_DB: root
-    POSTGRES_USER: secret
-    POSTGRES_PASSWORD: deslfy
+    POSTGRES_DB: deslfy
+    POSTGRES_USER: root
+    POSTGRES_PASSWORD: secret
   script:
     - echo "Database service started"
   tags:
