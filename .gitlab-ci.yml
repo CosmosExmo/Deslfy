@@ -2,7 +2,6 @@ image: golang:alpine
 
 stages:
   - Create Test DB
-  - Run Migrations
   - Run Test
 
 db_create:
@@ -27,7 +26,7 @@ db_create:
 run_tests:
   stage: Run Test
   needs:
-    - job: db_migration
+    - job: db_create
   script:
     - make test
   when: manual
