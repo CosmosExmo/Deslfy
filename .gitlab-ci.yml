@@ -13,6 +13,7 @@ db_create:
     POSTGRES_USER: root
     POSTGRES_PASSWORD: secret
     POSTGRES_HOST_AUTH_METHOD: trust
+    TZ: Europe/Istanbul
   before_script:
     - apk add --update curl && rm -rf /var/cache/apk/*
     - apk add --no-cache make
