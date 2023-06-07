@@ -4,9 +4,6 @@ stages:
   - Create Test DB
   - Run Test
 
-before_script:
-  - apk add --no-cache make
-
 db_create:
   stage: Create Test DB
   services:
@@ -19,6 +16,7 @@ db_create:
     TZ: Europe/Istanbul
   before_script:
     - apk add --update curl && rm -rf /var/cache/apk/*
+    - apk add --no-cache make
   script:
     - echo "Database service started"
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.1/migrate.linux-amd64.tar.gz | tar xvz
@@ -33,6 +31,8 @@ run_tests:
   stage: Run Test
   needs:
     - job: db_create
+  before_script:
+    - apk add --no-cache make
   script:
     - make test
   tags:
