@@ -1,5 +1,12 @@
-#app.env file must be inside src folder
-include src/app.env
+#*.env file must be inside src folder
+ifeq ($(CI), true)
+    ENV_FILE := src/test.env
+else
+    ENV_FILE := src/app.env
+endif
+
+include $(ENV_FILE)
+export
 export
 
 migrateup:
