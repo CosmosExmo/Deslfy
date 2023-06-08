@@ -7,7 +7,6 @@ endif
 
 include $(ENV_FILE)
 export
-export
 
 migrateup:
 	migrate -path src/db/migration -database "$(DB_SOURCE)" -verbose up

@@ -1,7 +1,9 @@
 services:
-  db:
+  postgres:
     image: postgres:15.3-alpine3.18
     restart: always
+    networks:
+      - deslfy-network
     expose:
       - 5432
     ports:
@@ -10,6 +12,26 @@ services:
       - db_data:/var/lib/postgresql/data
     env_file:
       - src/app.env
+  
+  api:
+    depends_on:
+      - postgres
+    restart: always
+    networks:
+      - deslfy-network
+    build:
+      context: src/
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    env_file:
+      - src/app.env
+    entrypoint: [ "/app/wait-for.sh", "postgres:5432", "--", "/app/start.sh" ]
+    command: [ "/app/main" ]
+
+networks:
+  deslfy-network:
+    driver: bridge
 
 volumes:
   db_data:
