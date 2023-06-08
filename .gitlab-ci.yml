@@ -12,6 +12,7 @@ db_create:
     POSTGRES_DB: deslfy
     POSTGRES_USER: root
     POSTGRES_PASSWORD: secret
+    POSTGRES_PORT: 5432
     POSTGRES_HOST_AUTH_METHOD: trust
     TZ: Europe/Istanbul
   before_script:
