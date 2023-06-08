@@ -1,11 +1,10 @@
 image: golang:alpine
 
 stages:
-  - Create Test DB
-  - Run Test
+  - Test
 
-db_create:
-  stage: Create Test DB
+db_create_test:
+  stage: Run Test
   services:
     - postgres:15.3-alpine3.18
   variables:
