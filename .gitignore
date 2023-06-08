@@ -7,7 +7,7 @@
 *.rdb
 
 # Environment variables
-*.env
+app.env
 
 # Binaries for programs and plugins
 *.exe
