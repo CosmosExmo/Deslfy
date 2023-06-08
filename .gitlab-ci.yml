@@ -4,7 +4,7 @@ stages:
   - Test
 
 db_create_test:
-  stage: Run Test
+  stage: Test
   services:
     - postgres:15.3-alpine3.18
   variables:
