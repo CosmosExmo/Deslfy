@@ -31,6 +31,10 @@ db_create_test:
 
 build_image:
   stage: Build
+  image: 23.0.0-alpine3.17
+  services:
+    - name: docker:23.0.0-dind
+      alias: docker
   script:
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
     - docker compose up --build
