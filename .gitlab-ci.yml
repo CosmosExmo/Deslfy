@@ -33,7 +33,7 @@ build_image:
   stage: Build
   image: docker:latest
   script:
-    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER 127.0.0.1:5050 --password-stdin
     - docker compose up --build
     - docker push $CI_REGISTRY_IMAGE
   tags:
