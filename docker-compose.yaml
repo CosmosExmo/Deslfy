@@ -16,6 +16,7 @@ services:
   api:
     depends_on:
       - postgres
+    image: deslfy:${CI_REGISTRY_IMAGE}
     restart: always
     networks:
       - deslfy-network

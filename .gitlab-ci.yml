@@ -2,6 +2,7 @@ image: golang:alpine
 
 stages:
   - Test
+  - Build
 
 db_create_test:
   stage: Test
@@ -24,6 +25,19 @@ db_create_test:
     - which migrate
     - make migrateup
     - make test
+  tags:
+    - deploy-runner
+  when: manual
+
+build_image:
+  stage: Build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - docker compose up --build
+    - docker push $CI_REGISTRY_IMAGE
   tags:
     - deploy-runner
   when: manual
