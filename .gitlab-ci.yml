@@ -41,10 +41,9 @@ build_image:
     - aws --version
     - docker --version
   script:
-    - docker compose up --build
+    - docker compose up
     - docker image tag deslfy:${CI_COMMIT_SHORT_SHA} $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA}
-    - aws ecr get-login-password | docker login -u AWS $AWS_DOCKER_REGISTRY_URI --password-stdin 
-    - docker compose up --build
+    - aws ecr get-login-password | docker login -u AWS $AWS_DOCKER_REGISTRY_URI --password-stdin
     - docker push $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA}
   tags:
     - deploy-runner
