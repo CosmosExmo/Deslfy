@@ -36,6 +36,7 @@ build_image:
     - name: docker:23.0.6-dind
       alias: docker
   script:
+    - ip addr show
     - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
     - docker compose up --build
     - docker push $CI_REGISTRY_IMAGE
