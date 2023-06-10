@@ -32,17 +32,16 @@ db_create_test:
 build_image:
   stage: Build
   image: 
-    name: amazon/aws-cli
+    name: amazon/aws-cli:2.11.27
     entrypoint: [""]
   services:
-    - name: docker:23.0.6-dind
-      alias: docker
+    - docker:23.0.6-dind
   before_script:
     - amazon-linux-extras install docker
     - aws --version
     - docker --version
   script:
-    - docker compose up -d --build
+    - docker compose up --build
     - docker image tag deslfy:${CI_COMMIT_SHORT_SHA} $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA}
     - aws ecr get-login-password | docker login -u AWS $AWS_DOCKER_REGISTRY_URI --password-stdin 
     - docker compose up --build
