@@ -32,10 +32,11 @@ db_create_test:
 build_image:
   stage: Build
   image: 
-    name: amazon/aws-cli:2.11.27
+    name: amazon/aws-cli
     entrypoint: [""]
   services:
-    - docker:23.0.6-dind
+    - name: docker:dind
+      alias: docker
   before_script:
     - amazon-linux-extras install docker
     - aws --version
