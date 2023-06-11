@@ -45,9 +45,9 @@ build_image:
     - amazon-linux-extras install docker
     - aws --version
     - docker --version
-    - docker run --rm docker:git apk update
-    - docker run --rm docker:git apk upgrade
-    - docker run --rm docker:git apk add --no-cache curl jq
+    - docker run docker:23.0.6 apk update
+    - docker run docker:23.0.6 apk upgrade
+    - docker run docker:23.0.6 apk add --no-cache curl jq
   script:
     - cd src/;
     - |
