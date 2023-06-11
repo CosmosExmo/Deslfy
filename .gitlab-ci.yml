@@ -10,7 +10,7 @@ create_test_env_file:
     - apk add --no-cache jq
   script:
     - |
-      echo $TEST_ENV | jq -Rs 'split(" ") | map(split("=") | {(.[0]): .[1]}) | add' > env.json
+      echo $TEST_ENV | jq -Rs 'split(" ") | map(split("=") | {(.[0]): (.[1:] | join("="))}) | add' > env.json
       cat env.json | jq -r 'to_entries[] | "\(.key)=\(.value)"' > app.env
   after_script:
     - mkdir env_files
@@ -63,14 +63,11 @@ create_prod_env_file:
     - apk add --no-cache jq
   script:
     - |
-      echo $APP_ENV | jq -Rs 'split(" ") | map(split("=") | {(.[0]): .[1]}) | add' > env.json
+      echo $APP_ENV | jq -Rs 'split(" ") | map(split("=") | {(.[0]): (.[1:] | join("="))}) | add' > env.json
       cat env.json | jq -r 'to_entries[] | "\(.key)=\(.value)"' > app.env
   after_script:
     - mkdir env_files
     - mv app.env env_files
-    - ls
-    - cd env_files/
-    - ls
   artifacts:
     name: env_files_artifact
     paths:
