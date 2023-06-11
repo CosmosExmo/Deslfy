@@ -39,15 +39,13 @@ build_image:
   image: 
     name: amazon/aws-cli:2.11.27
     entrypoint: [""]
-  services:
-    - docker:23.0.6-dind-alpine3.18
   before_script:
     - amazon-linux-extras install docker
     - aws --version
     - docker --version
-    - docker run docker:23.0.6 apk update
-    - docker run docker:23.0.6 apk upgrade
-    - docker run docker:23.0.6 apk add --no-cache curl jq
+    - apk update
+    - apk upgrade
+    - apk add --no-cache curl jq
   script:
     - cd src/;
     - |
