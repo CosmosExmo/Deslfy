@@ -38,6 +38,7 @@ build_image:
   stage: Build
   image: 
     name: amazon/aws-cli:2.11.27
+    entrypoint: [""]
   before_script:
     - aws --version
     - docker --version
