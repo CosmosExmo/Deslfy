@@ -45,6 +45,9 @@ create_env_file:
   after_script:
     - mkdir env_files
     - mv app.env env_files
+    - ls
+    - cd env_files/
+    - ls
   artifacts:
     name: env_files_artifact
     paths:
@@ -70,6 +73,7 @@ build_image:
     - docker --version
   script:
     - cd src/;
+    - ls
     - mv env_files/app.env .
     - ls
     - docker build -t $AWS_DOCKER_REGISTRY_URI/deslfy:latest -t $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA} .
