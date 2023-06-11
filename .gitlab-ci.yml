@@ -37,9 +37,7 @@ variables:
 build_image:
   stage: Build
   image: 
-    name: docker:latest
-  services:
-    - amazon/aws-cli:2.11.27
+    name: amazon/aws-cli:2.11.27
   before_script:
     - aws --version
     - docker --version
