@@ -10,11 +10,12 @@ test_env:
     - apk add --no-cache jq
   script:
     - |
-      cd src/
+      cd src/;
       echo $TEST_VAR | jq -Rs 'split(" ") | map(split("=") | {(.[0]): .[1]}) | add' > env.json
       cat env.json | jq -r 'to_entries[] | "\(.key)=\(.value)"' > app.env
       echo PARSING SUCCESS
-      echo pwd
+      pwd
+      ls
       cat app.env
   tags:
     - deploy-runner
