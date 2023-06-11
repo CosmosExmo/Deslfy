@@ -40,7 +40,8 @@ build_image:
     name: amazon/aws-cli:2.11.27
     entrypoint: [""]
   services:
-    - docker:latest
+    - name: docker:latest
+      alias: docker
   before_script:
     - aws --version
     - docker --version
