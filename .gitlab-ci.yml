@@ -7,7 +7,7 @@ stages:
 test_env:
   stage: Test
   script:
-    - echo $TEST_VAR
+    - echo $TEST_VAR | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]'
   tags:
     - deploy-runner
   when: manual
