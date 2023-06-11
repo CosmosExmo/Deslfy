@@ -16,7 +16,7 @@ services:
   api:
     depends_on:
       - postgres
-    image: deslfy:${CI_COMMIT_SHORT_SHA}
+    image: deslfy-api
     restart: always
     networks:
       - deslfy-network
