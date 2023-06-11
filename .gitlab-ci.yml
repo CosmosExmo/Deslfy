@@ -37,10 +37,10 @@ variables:
 build_image:
   stage: Build
   image: 
-    name: amazon/aws-cli:2.11.27
-    entrypoint: [""]
+    name: docker:latest
+  services:
+    - amazon/aws-cli:2.11.27
   before_script:
-    - amazon-linux-extras install docker
     - aws --version
     - docker --version
     - apk update
