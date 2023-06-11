@@ -49,8 +49,8 @@ build_image:
   script:
     - cd src/;
     - |
-      echo $APP_ENV | docker run docker:23.0.6 jq -Rs 'split(" ") | map(split("=") | {(.[0]): .[1]}) | add' > env.json
-      cat env.json | docker run docker:23.0.6 jq -r 'to_entries[] | "\(.key)=\(.value)"' > app.env
+      echo $APP_ENV | jq -Rs 'split(" ") | map(split("=") | {(.[0]): .[1]}) | add' > env.json
+      cat env.json | jq -r 'to_entries[] | "\(.key)=\(.value)"' > app.env
     - docker build -t $AWS_DOCKER_REGISTRY_URI/deslfy:latest -t $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA} .
     - aws ecr get-login-password | docker login -u AWS $AWS_DOCKER_REGISTRY_URI --password-stdin
     - docker push $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA}
