@@ -75,9 +75,9 @@ build_image:
     - mv env_files/app.env src/
     - cd src/;
     - ls
-    - docker build -t $AWS_DOCKER_REGISTRY_URI/deslfy:latest -t $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA} .
-    - aws ecr get-login-password | docker login -u AWS $AWS_DOCKER_REGISTRY_URI --password-stdin
-    - docker push $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA}
+    - docker build -t $AWS_REGISTRY_URI:latest -t $AWS_REGISTRY_URI:${CI_COMMIT_SHORT_SHA} .
+    - aws ecr get-login-password | docker login -u AWS $AWS_REGISTRY_URI --password-stdin
+    - docker push $AWS_REGISTRY_URI:${CI_COMMIT_SHORT_SHA}
   tags:
     - deploy-runner
   when: manual
