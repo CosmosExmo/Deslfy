@@ -1,4 +1,4 @@
-image: golang:alpine
+image: golang:1.20.5-alpine3.18
 
 stages:
   - Test
@@ -37,10 +37,10 @@ variables:
 build_image:
   stage: Build
   image: 
-    name: amazon/aws-cli
+    name: amazon/aws-cli:2.11.27
     entrypoint: [""]
   services:
-    - docker:dind
+    - docker:23.0.6-dind-alpine3.18
   before_script:
     - amazon-linux-extras install docker
     - aws --version
@@ -49,6 +49,22 @@ build_image:
     - cd src/; docker build -t $AWS_DOCKER_REGISTRY_URI/deslfy:latest -t $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA} .
     - aws ecr get-login-password | docker login -u AWS $AWS_DOCKER_REGISTRY_URI --password-stdin
     - docker push $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA}
+  tags:
+    - deploy-runner
+  when: manual
+
+build_image_gitlab_cr:
+  stage: Build
+  image: docker:23.0.6-dind-alpine3.18
+  services:
+    - docker:23.0.6-dind-alpine3.18
+  before_script:
+    - docker --version
+  script:
+    - echo $CI_REGISTRY
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - docker build -t $CI_REGISTRY/deslfy:latest -t $CI_REGISTRY/deslfy:${CI_COMMIT_SHORT_SHA} .
+    - docker push $CI_REGISTRY_IMAGE
   tags:
     - deploy-runner
   when: manual

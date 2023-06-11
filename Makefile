@@ -1,10 +1,5 @@
 #*.env file must be inside src folder
-ifeq ($(CI), true)
-    ENV_FILE := src/test.env
-else
-    ENV_FILE := src/app.env
-endif
-
+ENV_FILE := src/app.env
 include $(ENV_FILE)
 export
 

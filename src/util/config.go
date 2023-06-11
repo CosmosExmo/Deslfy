@@ -1,7 +1,6 @@
 package util
 
 import (
-	"os"
 	"time"
 
 	"github.com/spf13/viper"
@@ -16,15 +15,8 @@ type Config struct {
 }
 
 func LoadConfig(path string) (config Config, err error) {
-	isRunningInCI := os.Getenv("CI") == "true"
-
-	configName := "app"
-	if isRunningInCI {
-		configName = "test"
-	}
-
 	viper.AddConfigPath(path)
-	viper.SetConfigName(configName)
+	viper.SetConfigName("app")
 	viper.SetConfigType("env")
 
 	viper.AutomaticEnv()
