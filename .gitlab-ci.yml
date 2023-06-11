@@ -6,6 +6,8 @@ stages:
 
 test_env:
   stage: Test
+  before_script:
+    - apk add --no-cache jq
   script:
     - echo $TEST_VAR | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]'
   tags:
