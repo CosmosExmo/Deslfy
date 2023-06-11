@@ -4,23 +4,6 @@ stages:
   - Test
   - Build
 
-test_env:
-  stage: Test
-  before_script:
-    - apk add --no-cache jq
-  script:
-    - |
-      cd src/;
-      echo $TEST_VAR | jq -Rs 'split(" ") | map(split("=") | {(.[0]): .[1]}) | add' > env.json
-      cat env.json | jq -r 'to_entries[] | "\(.key)=\(.value)"' > app.env
-      echo PARSING SUCCESS
-      pwd
-      ls
-      cat app.env
-  tags:
-    - deploy-runner
-  when: manual
-
 db_create_test:
   stage: Test
   services:
@@ -62,8 +45,13 @@ build_image:
     - amazon-linux-extras install docker
     - aws --version
     - docker --version
+    - apk add --no-cache jq
   script:
-    - cd src/; docker build -t $AWS_DOCKER_REGISTRY_URI/deslfy:latest -t $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA} .
+    - cd src/;
+    - |
+      echo $APP_ENV | jq -Rs 'split(" ") | map(split("=") | {(.[0]): .[1]}) | add' > env.json
+      cat env.json | jq -r 'to_entries[] | "\(.key)=\(.value)"' > app.env
+    - docker build -t $AWS_DOCKER_REGISTRY_URI/deslfy:latest -t $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA} .
     - aws ecr get-login-password | docker login -u AWS $AWS_DOCKER_REGISTRY_URI --password-stdin
     - docker push $AWS_DOCKER_REGISTRY_URI/deslfy:${CI_COMMIT_SHORT_SHA}
   tags:
