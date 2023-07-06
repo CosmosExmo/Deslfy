@@ -27,7 +27,7 @@ prepare_env_file:
 make_test:
   stage: Test
   needs:
-    - job: create_test_env_file
+    - job: prepare_env_file
       artifacts: true
   services:
     - postgres:15.3-alpine3.18
@@ -81,7 +81,7 @@ prod_prepare_env_file:
 prod_build_image:
   stage: Build
   needs:
-    - job: create_prod_env_file
+    - job: prod_prepare_env_file
       artifacts: true
   image: 
     name: amazon/aws-cli:2.11.27
@@ -105,7 +105,7 @@ prod_build_image:
 prod_deploy_image:
   stage: Build
   needs:
-    - job: build_image
+    - job: prod_build_image
   image:
     name: bitnami/kubectl:latest
   script:
