@@ -107,9 +107,12 @@ prod_deploy_image:
   needs:
     - job: prod_build_image
   image:
-    name: bitnami/kubectl:latest
+    name: amazon/aws-cli:2.11.27
+  services:
+    - bitnami/kubectl:latest
   script:
     - |
+      aws eks update-kubeconfig --name Deslfy --region eu-central-1
       kubectl apply -f eks/aws-auth.yaml
       kubectl apply -f eks/deployment.yaml
       kubectl apply -f eks/service.yaml
