@@ -95,7 +95,22 @@ build_image:
     - cd src/;
     - docker build -t $AWS_REGISTRY_URI:latest -t $AWS_REGISTRY_URI:${CI_COMMIT_SHORT_SHA} .
     - aws ecr get-login-password | docker login -u AWS $AWS_REGISTRY_URI --password-stdin
-    - docker push $AWS_REGISTRY_URI:${CI_COMMIT_SHORT_SHA}
+    - docker push -a $AWS_REGISTRY_URI
   tags:
     - deploy-runner
   when: manual
+
+deploy_image:
+  stage: Build
+  needs:
+    - job: build_image
+  image:
+    name: bitnami/kubectl:latest
+  script:
+    - |
+      kubectl apply -f eks/aws-auth.yaml
+      kubectl apply -f eks/deployment.yaml
+      kubectl apply -f eks/service.yaml
+      kubectl apply -f eks/postgresql-service.yaml
+      kubectl apply -f eks/issuer.yaml
+      kubectl apply -f eks/ingress.yaml
