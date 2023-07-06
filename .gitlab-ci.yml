@@ -4,7 +4,7 @@ stages:
   - Test
   - Build
 
-create_test_env_file:
+prepare_env_file:
   stage: Test
   before_script:
     - apk add --no-cache jq
@@ -21,9 +21,10 @@ create_test_env_file:
       - env_files
   tags:
     - deploy-runner
-  when: manual
+  only:
+    - merge_requests
 
-db_create_test:
+make_test:
   stage: Test
   needs:
     - job: create_test_env_file
@@ -50,14 +51,15 @@ db_create_test:
     - make test
   tags:
     - deploy-runner
-  when: manual
+  only:
+    - merge_requests
 
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
 
-create_prod_env_file:
+prod_prepare_env_file:
   stage: Build
   before_script:
     - apk add --no-cache jq
@@ -76,7 +78,7 @@ create_prod_env_file:
     - deploy-runner
   when: manual
 
-build_image:
+prod_build_image:
   stage: Build
   needs:
     - job: create_prod_env_file
@@ -100,7 +102,7 @@ build_image:
     - deploy-runner
   when: manual
 
-deploy_image:
+prod_deploy_image:
   stage: Build
   needs:
     - job: build_image
