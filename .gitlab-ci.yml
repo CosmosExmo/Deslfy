@@ -104,6 +104,8 @@ prod_build_image:
 
 prod_deploy_image:
   stage: Build
+  needs:
+    - job: prod_build_image
   image:
     name: matshareyourscript/aws-helm-kubectl
   before_script:
