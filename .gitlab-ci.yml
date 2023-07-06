@@ -119,3 +119,6 @@ prod_deploy_image:
       kubectl apply -f eks/postgresql-service.yaml
       kubectl apply -f eks/issuer.yaml
       kubectl apply -f eks/ingress.yaml
+  tags:
+    - deploy-runner
+  when: manual
