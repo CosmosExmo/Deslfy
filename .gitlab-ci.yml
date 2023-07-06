@@ -104,12 +104,15 @@ prod_build_image:
 
 prod_deploy_image:
   stage: Build
-  needs:
-    - job: prod_build_image
   image:
-    name: amazon/aws-cli:2.11.27
-  services:
-    - bitnami/kubectl:latest
+    name: matshareyourscript/aws-helm-kubectl
+  before_script:
+    - export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+    - export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    - export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+    - |
+      echo $APP_ENV | jq -Rs 'split(" ") | map(split("=") | {(.[0]): (.[1:] | join("="))}) | add' > env.json
+      cat env.json | jq -r 'to_entries[] | "\(.key)=\(.value)"' > app.env
   script:
     - |
       aws eks update-kubeconfig --name Deslfy --region eu-central-1
