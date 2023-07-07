@@ -33,18 +33,18 @@ func (server *Server) setupRouter() {
 
 	router.GET("/r/:desly", server.redirect)
 
-	router.POST("/api/users", server.createUser)
-	router.POST("/api/users/login", server.loginUser)
+	router.POST("/users", server.createUser)
+	router.POST("/users/login", server.loginUser)
 
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 
-	authRoutes.POST("/api/desly", server.createDesly)
-	authRoutes.GET("/api/desly/:desly", server.getDesly)
+	authRoutes.POST("/desly", server.createDesly)
+	authRoutes.GET("/desly/:desly", server.getDesly)
 
-	authRoutes.POST("/api/token", server.createUserToken)
-	authRoutes.POST("/api/token/delete", server.deleteUserToken)
-	authRoutes.GET("/api/token/:id", server.getUserToken)
-	authRoutes.GET("/api/token", server.getUserTokens)
+	authRoutes.POST("/token", server.createUserToken)
+	authRoutes.POST("/token/delete", server.deleteUserToken)
+	authRoutes.GET("/token/:id", server.getUserToken)
+	authRoutes.GET("/token", server.getUserTokens)
 
 	server.router = router
 }

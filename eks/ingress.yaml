@@ -14,18 +14,21 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: "deslfy.com"
+  - host: "api.deslfy.com"
     http:
       paths:
       - pathType: Prefix
-        path: "/api"
+        path: "/"
         backend:
           service:
             name: deslfy-api-service
             port:
               number: 80
+  - host: "deslfy.com"
+    http:
+      paths:
       - pathType: Prefix
-        path: "/r"
+        path: "/r/"
         backend:
           service:
             name: deslfy-api-service
