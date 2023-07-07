@@ -102,7 +102,7 @@ func TestCreateDeslyAPI(t *testing.T) {
 			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
 
-			url := "/api/desly"
+			url := "/desly"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
 			require.NoError(t, err)
 
@@ -200,7 +200,7 @@ func TestGetDeslyAPI(t *testing.T) {
 			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/api/desly/%s", tc.desly)
+			url := fmt.Sprintf("/desly/%s", tc.desly)
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 
