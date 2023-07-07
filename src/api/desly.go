@@ -4,10 +4,36 @@ import (
 	"database/sql"
 	db "desly/db/sqlc"
 	"desly/token"
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
+
+const deslyRedirectUrl = "deslfy.com/r/"
+
+type deslyResponse struct {
+	ID        int32     `json:"id"`
+	Redirect  string    `json:"redirect"`
+	Desly     string    `json:"desly"`
+	DeslyURL  string    `json:"desly_url"`
+	Clicked   int64     `json:"clicked"`
+	CreatedAt time.Time `json:"created_at"`
+	Owner     string    `json:"owner"`
+}
+
+func newDeslyResponse(desly db.Desly) deslyResponse {
+	return deslyResponse{
+		ID:        desly.ID,
+		Redirect:  desly.Redirect,
+		Desly:     desly.Desly,
+		DeslyURL:  fmt.Sprintf("%s%s", deslyRedirectUrl, desly.Desly),
+		Clicked:   desly.Clicked,
+		CreatedAt: desly.CreatedAt,
+		Owner:     desly.Owner,
+	}
+}
 
 type createDeslyRequest struct {
 	Redirect string `json:"redirect" binding:"required,min=15"`
@@ -34,7 +60,9 @@ func (server *Server) createDesly(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, desly)
+	response := newDeslyResponse(desly)
+
+	ctx.JSON(http.StatusOK, response)
 }
 
 type getDeslyRequest struct {
@@ -67,7 +95,9 @@ func (server *Server) getDesly(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, desly)
+	response := newDeslyResponse(desly)
+
+	ctx.JSON(http.StatusOK, response)
 }
 
 type redirectRequest struct {
