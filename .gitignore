@@ -26,3 +26,6 @@
 
 # Dependency directories
 vendor/
+
+# Logs
+*.log
