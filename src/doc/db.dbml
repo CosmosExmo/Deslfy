@@ -1,0 +1,63 @@
+Project Deslfy {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # Deslfy Database
+  '''
+}
+Table deslies as D {
+  id serial [pk, increment]
+  owner varchar [not null, ref: > U.username]
+  redirect varchar [not null]
+  desly varchar [not null, unique]
+  clicked bigint [not null, default: 0]
+  created_at timestamptz [not null, default: 'now()']
+
+  Indexes {
+    owner
+    desly
+    redirect
+    (owner, desly)
+    (owner, redirect) [unique]
+  }
+}
+
+Table users as U {
+  username varchar [pk]
+  hashed_password varchar [not null]
+  full_name varchar [not null]
+  email varchar [unique, not null]
+  password_changed_at timestamptz [not null, default: "0001-01-01 00:00:00+00Z"]
+  created_at timestamptz [not null, default: 'now()']
+}
+
+Table user_tokens as T {
+  id serial [pk, increment]
+  owner varchar [not null, ref: > U.username]
+  token varchar [not null]
+  expire_at timestamptz [not null]
+  created_at timestamptz [not null, default: 'now()']
+
+  Indexes {
+    owner
+    token
+    expire_at
+    (owner, token)
+    (owner, token, expire_at) [unique]
+  }
+}
+
+Table sessions as S {
+  id uuid [pk]
+  username varchar [ref: > U.username, not null]
+  refresh_token varchar [not null]
+  user_agent varchar [not null]
+  client_ip varchar [not null]
+  is_blocked boolean [not null, default: false]
+  expires_at timestamptz [not null]
+  created_at timestamptz [not null, default: `now()`]
+
+  Indexes {
+    id
+    username
+  }
+}
