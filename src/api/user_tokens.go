@@ -24,7 +24,7 @@ func (server *Server) createUserToken(ctx *gin.Context) {
 
 	expireAt := time.Unix(req.ExpireAt, 0)
 	duration := time.Until(expireAt)
-	accessToken, err := server.tokenMaker.CreateToken(authPayload.Username, duration)
+	accessToken, _, err := server.tokenMaker.CreateToken(authPayload.Username, duration, token.AccessToken)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return

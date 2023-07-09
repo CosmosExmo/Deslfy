@@ -46,6 +46,12 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 			return
 		}
 
+		if payload.TokenType != token.AccessToken {
+			err := errors.New("incorrect token type")
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, errorResponse(err))
+			return
+		}
+
 		ctx.Set(authorizationPayloadKey, payload)
 		ctx.Next()
 	}

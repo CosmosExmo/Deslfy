@@ -16,9 +16,10 @@ func createRandomToken(t *testing.T, user User) UserToken {
 	require.NoError(t, err)
 
 	duration := time.Hour
-	accessToken, err := maker.CreateToken(user.Username, duration)
+	accessToken, payload, err := maker.CreateToken(user.Username, duration, token.AccessToken)
 	require.NoError(t, err)
 	require.NotEmpty(t, accessToken)
+	require.NotEmpty(t, payload)
 
 	expireAt := time.Now().Add(duration)
 	arg := CreateUserTokenParams{
