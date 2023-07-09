@@ -25,6 +25,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8080:8080
+      - 9090:9090
     env_file:
       - src/app.env
     entrypoint: [ "/app/wait-for.sh", "postgres:5432", "--", "/app/start.sh" ]

@@ -13,6 +13,9 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	_ "github.com/lib/pq"
 	"github.com/rakyll/statik/fs"
@@ -32,9 +35,25 @@ func main() {
 		log.Fatal("Error connecting to database: ", err)
 	}
 
+	//Run db migration
+	funDBMigration(config.MigrationURL, config.DBSource)
+
 	store := db.NewStore(conn)
 	go runGatewayServer(config, store)
 	runGrpcServer(config, store)
+}
+
+func funDBMigration(migrationURL string, dbSource string) {
+	migration, err := migrate.New(migrationURL, dbSource)
+	if err != nil {
+		log.Fatal("cannot create new migrate instance: ", err)
+	}
+
+	if err = migration.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal("failed to run migrate up: ", err)
+	}
+
+	log.Println("db migrated successfully")
 }
 
 func runGinServer(config util.Config, store db.Store) {
@@ -58,7 +77,7 @@ func runGrpcServer(config util.Config, store db.Store) {
 	grpcServer := grpc.NewServer()
 	pb.RegisterDeslfyServer(grpcServer, server)
 	reflection.Register(grpcServer)
-	
+
 	listener, err := net.Listen("tcp", config.GRPCServerAddress)
 	if err != nil {
 		log.Fatal("cannot create listener")
@@ -102,7 +121,7 @@ func runGatewayServer(config util.Config, store db.Store) {
 	if err != nil {
 		log.Fatal("cannot load api_docs statik files: ", err)
 	}
-	
+
 	swaggerHandler := http.StripPrefix("/api/docs/", http.FileServer(statikFS))
 	mux.Handle("/api/docs/", swaggerHandler)
 
