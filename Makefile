@@ -30,4 +30,17 @@ test:
 server:
 	cd src/; go run main.go
 
-.PHONY: migrateup migratedown migrateup1 migratedown1 db_docs sqlc test server
+tidy:
+	cd src/; go mod tidy
+
+proto:
+	rm -f src/pb/*.go
+	rm -f src/doc/swagger/*.swagger.json
+	protoc --proto_path=src/proto --go_out=src/pb --go_opt=paths=source_relative \
+    --go-grpc_out=src/pb --go-grpc_opt=paths=source_relative \
+		--grpc-gateway_out=src/pb --grpc-gateway_opt=paths=source_relative \
+		--openapiv2_out=src/doc/swagger --openapiv2_opt=allow_merge=true,merge_file_name=deslfy \
+    src/proto/*.proto
+	statik -src=src/doc/swagger -dest=src/doc -ns=api_docs
+
+.PHONY: migrateup migratedown migrateup1 migratedown1 db_docs sqlc test server tidy proto
