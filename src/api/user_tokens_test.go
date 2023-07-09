@@ -102,7 +102,7 @@ func TestCreateUserTokenAPI(t *testing.T) {
 			fmt.Print(tc.body)
 			require.NoError(t, err)
 
-			url := "/token"
+			url := "/user_tokens"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
 			require.NoError(t, err)
 
@@ -184,7 +184,7 @@ func TestGetUserTokenAPI(t *testing.T) {
 			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
-			url := fmt.Sprintf("/token/%d", tc.id)
+			url := fmt.Sprintf("/user_tokens/%d", tc.id)
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 
@@ -253,7 +253,7 @@ func TestGetUserTokensAPI(t *testing.T) {
 			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
-			url := "/token"
+			url := "/user_tokens"
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 
@@ -346,7 +346,7 @@ func TestDeleteUserTokensAPI(t *testing.T) {
 			fmt.Print(tc.body)
 			require.NoError(t, err)
 
-			url := "/token/delete"
+			url := "/user_tokens/delete"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
 			require.NoError(t, err)
 

@@ -35,16 +35,17 @@ func (server *Server) setupRouter() {
 
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
+	router.POST("/token/renew_access", server.renewAccessToken)
 
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 
 	authRoutes.POST("/desly", server.createDesly)
 	authRoutes.GET("/desly/:desly", server.getDesly)
 
-	authRoutes.POST("/token", server.createUserToken)
-	authRoutes.POST("/token/delete", server.deleteUserToken)
-	authRoutes.GET("/token/:id", server.getUserToken)
-	authRoutes.GET("/token", server.getUserTokens)
+	authRoutes.POST("/user_tokens", server.createUserToken)
+	authRoutes.POST("/user_tokens/delete", server.deleteUserToken)
+	authRoutes.GET("/user_tokens/:id", server.getUserToken)
+	authRoutes.GET("/user_tokens", server.getUserTokens)
 
 	server.router = router
 }
