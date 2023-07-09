@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"database/sql"
-	"desly/api"
 	db "desly/db/sqlc"
 	_ "desly/doc/statik"
 	"desly/gapi"
@@ -56,7 +55,7 @@ func funDBMigration(migrationURL string, dbSource string) {
 	log.Println("db migrated successfully")
 }
 
-func runGinServer(config util.Config, store db.Store) {
+/* func runGinServer(config util.Config, store db.Store) {
 	server, err := api.NewServer(config, store)
 	if err != nil {
 		log.Fatal("Cannot create server: ", err)
@@ -66,7 +65,7 @@ func runGinServer(config util.Config, store db.Store) {
 	if err != nil {
 		log.Fatal("Error starting server: ", err)
 	}
-}
+} */
 
 func runGrpcServer(config util.Config, store db.Store) {
 	server, err := gapi.NewServer(config, store)
