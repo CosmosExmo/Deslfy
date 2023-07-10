@@ -42,14 +42,14 @@ func main() {
 	}
 
 	//Run db migration
-	funDBMigration(config.MigrationURL, config.DBSource)
+	runDBMigration(config.MigrationURL, config.DBSource)
 
 	store := db.NewStore(conn)
 	go runGatewayServer(config, store)
 	runGrpcServer(config, store)
 }
 
-func funDBMigration(migrationURL string, dbSource string) {
+func runDBMigration(migrationURL string, dbSource string) {
 	migration, err := migrate.New(migrationURL, dbSource)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot create new migrate instance")
