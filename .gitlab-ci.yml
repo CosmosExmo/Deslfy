@@ -31,6 +31,7 @@ make_test:
       artifacts: true
   services:
     - postgres:15.3-alpine3.18
+    - docker:23.0.6-alpine3.18
   variables:
     POSTGRES_DB: deslfy
     POSTGRES_USER: root
@@ -44,10 +45,7 @@ make_test:
   script:
     - mv env_files/app.env src/
     - echo "Database service started"
-    - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.1/migrate.linux-amd64.tar.gz | tar xvz
-    - mv migrate /usr/bin/migrate
-    - which migrate
-    - make migrateup
+    - docker run --name redis -p 6379:6379 -d redis:6.0.20-alpine3.18
     - make test
   tags:
     - deploy-runner
