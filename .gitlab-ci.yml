@@ -44,6 +44,10 @@ make_test:
   script:
     - mv env_files/app.env src/
     - echo "Database service started"
+    - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.1/migrate.linux-amd64.tar.gz | tar xvz
+    - mv migrate /usr/bin/migrate
+    - which migrate
+    - make migrateup
     - make test
   tags:
     - deploy-runner
