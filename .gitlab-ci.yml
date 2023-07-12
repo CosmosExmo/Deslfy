@@ -48,7 +48,7 @@ make_test:
   script:
     - mv env_files/app.env src/
     - echo "Database service started"
-    - docker run --name redis -p 6379:6379 -d redis:6.0.20-alpine3.18
+    - docker exec -it redis redis-cli ping
     - make test
   tags:
     - deploy-runner
