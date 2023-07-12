@@ -1,5 +1,8 @@
 image: golang:1.20.5-alpine3.18
 
+services:
+  - redis:6.0.20-alpine3.18
+
 stages:
   - Test
   - Build
@@ -34,7 +37,6 @@ make_test:
     entrypoint: [""]
   services:
     - postgres:15.3-alpine3.18
-    - redis:6.0.20-alpine3.18
   variables:
     POSTGRES_DB: deslfy
     POSTGRES_USER: root
@@ -42,16 +44,13 @@ make_test:
     POSTGRES_PORT: 5432
     POSTGRES_HOST_AUTH_METHOD: trust
     TZ: Europe/Istanbul
-    REDIS_PORT: 6379
-    REDIS_HOST: redis
-    REDIS_URL: redis://redis:6379
   before_script:
     - apk add --update curl && rm -rf /var/cache/apk/*
     - apk add --no-cache make
   script:
     - mv env_files/app.env src/
     - echo "Database service started"
-    - docker exec -it redis redis-cli ping
+    - redis-cli -h redis PING
     - make test
   tags:
     - deploy-runner
