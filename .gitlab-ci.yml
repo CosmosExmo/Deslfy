@@ -31,7 +31,6 @@ make_test:
       artifacts: true
   services:
     - postgres:15.3-alpine3.18
-    - docker:23.0.6-alpine3.18
   variables:
     POSTGRES_DB: deslfy
     POSTGRES_USER: root
