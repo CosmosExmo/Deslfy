@@ -5,6 +5,8 @@ import (
 	db "desly/db/sqlc"
 
 	"github.com/hibiken/asynq"
+	"github.com/redis/go-redis/v9"
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -26,12 +28,20 @@ type RedisTaskProcessor struct {
 }
 
 func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskProcessor {
-	server := asynq.NewServer(redisOpt, asynq.Config{
-		Queues: map[string]int{
-			QueueCritical: 10,
-			QueueDefault:  5,
-		},
-	})
+	logger := NewLogger()
+	redis.SetLogger(logger)
+
+	server := asynq.NewServer(redisOpt,
+		asynq.Config{
+			Queues: map[string]int{
+				QueueCritical: 10,
+				QueueDefault:  5,
+			},
+			Logger: logger,
+			ErrorHandler: asynq.ErrorHandlerFunc(func(ctx context.Context, task *asynq.Task, err error) {
+				log.Error().Err(err).Type("type", task.Type()).Bytes("payload", task.Payload()).Msg("process failed")
+			}),
+		})
 	return &RedisTaskProcessor{
 		server: server,
 		store:  store,
