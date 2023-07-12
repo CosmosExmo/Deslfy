@@ -43,4 +43,7 @@ proto:
     src/proto/*.proto
 	statik -src=src/doc/swagger -dest=src/doc -ns=api_docs
 
+redis:
+	docker run --name redis -p 6379:6379 -d redis:6.0.20-alpine3.18
+
 .PHONY: migrateup migratedown migrateup1 migratedown1 db_docs sqlc test server tidy proto
