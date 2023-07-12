@@ -29,12 +29,8 @@ make_test:
   needs:
     - job: prepare_env_file
       artifacts: true
-  image:
-    name: docker:23.0.6-alpine3.18
-    entrypoint: [""]
   services:
     - postgres:15.3-alpine3.18
-    - redis:6.0.20-alpine3.18
   variables:
     POSTGRES_DB: deslfy
     POSTGRES_USER: root
