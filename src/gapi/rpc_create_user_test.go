@@ -7,11 +7,13 @@ import (
 	db "desly/db/sqlc"
 	"desly/pb"
 	"desly/util"
+	"desly/worker"
 	"fmt"
 	"reflect"
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/hibiken/asynq"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -150,7 +152,13 @@ func TestCreateUserAPI(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := newTestServer(t, store)
+			redisOpt := asynq.RedisClientOpt{
+				Addr: "asd",
+			}
+		
+			taskDistributor := worker.NewRedisTaskDistributor(redisOpt)
+
+			server := newTestServer(t, store, taskDistributor)
 			res, err := server.CreateUser(context.Background(), tc.req)
 			tc.checkResponse(t, res, err)
 		})
