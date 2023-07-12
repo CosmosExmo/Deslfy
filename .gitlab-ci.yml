@@ -47,11 +47,9 @@ make_test:
   before_script:
     - apk add --update curl && rm -rf /var/cache/apk/*
     - apk add --no-cache make
-    - apk add --no-cache redis
   script:
     - mv env_files/app.env src/
     - echo "Database service started"
-    - redis-cli -h redis PING
     - make test
   tags:
     - deploy-runner
