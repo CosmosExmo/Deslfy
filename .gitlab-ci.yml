@@ -47,6 +47,7 @@ make_test:
   before_script:
     - apk add --update curl && rm -rf /var/cache/apk/*
     - apk add --no-cache make
+    - apt-get install redis-tools
   script:
     - mv env_files/app.env src/
     - echo "Database service started"
