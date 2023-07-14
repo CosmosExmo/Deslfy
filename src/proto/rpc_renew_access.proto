@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "deslfy/pb";
+
+message RenewAccessRequest {
+  string refresh_token = 1;
+}
+
+message RenewAccessResponse {
+  string access_token = 1;
+  google.protobuf.Timestamp access_token_expires_at = 2;
+}
+

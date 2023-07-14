@@ -7,6 +7,7 @@ import "rpc_create_user.proto";
 import "rpc_update_user.proto";
 import "rpc_login_user.proto";
 import "rpc_verify_email.proto";
+import "rpc_renew_access.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "deslfy/pb";
@@ -24,6 +25,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 };
 
 service Deslfy {
+  //Users
   rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
     option (google.api.http) = {
       post: "/v1/users"
@@ -50,7 +52,7 @@ service Deslfy {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "Use this API to login user and ge access & refresh token."
+      description: "Use this API to login user and get access & refresh token."
       summary: "Login user"
     };
   };
@@ -63,5 +65,22 @@ service Deslfy {
       summary: "Verify user email"
     };
   };
+
+  //Token
+  rpc RenewAccess (RenewAccessRequest) returns (RenewAccessResponse) {
+    option (google.api.http) = {
+      post: "/v1/token/renew_access"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to renew access token with refresh token."
+      summary: "Renew Access Token"
+    };
+  };
+
+  //User Tokens
+  
+
+  //Deslfy
 }
 

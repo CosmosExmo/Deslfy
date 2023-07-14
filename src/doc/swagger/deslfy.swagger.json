@@ -21,6 +21,40 @@
     "application/json"
   ],
   "paths": {
+    "/v1/token/renew_access": {
+      "post": {
+        "summary": "Renew Access Token",
+        "description": "Use this API to renew access token with refresh token.",
+        "operationId": "Deslfy_RenewAccess",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbRenewAccessResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbRenewAccessRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Deslfy"
+        ]
+      }
+    },
     "/v1/users": {
       "post": {
         "summary": "Create new user",
@@ -90,7 +124,7 @@
     "/v1/users/login": {
       "post": {
         "summary": "Login user",
-        "description": "Use this API to login user and ge access \u0026 refresh token.",
+        "description": "Use this API to login user and get access \u0026 refresh token.",
         "operationId": "Deslfy_LoginUser",
         "responses": {
           "200": {
@@ -218,6 +252,26 @@
           "format": "date-time"
         },
         "refreshTokenExpiresAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "pbRenewAccessRequest": {
+      "type": "object",
+      "properties": {
+        "refreshToken": {
+          "type": "string"
+        }
+      }
+    },
+    "pbRenewAccessResponse": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "accessTokenExpiresAt": {
           "type": "string",
           "format": "date-time"
         }

@@ -42,5 +42,9 @@ func (server *Server) authorizeUser(ctx context.Context) (*token.Payload, error)
 		return nil, err
 	}
 
+	if payload.TokenType != token.AccessToken {
+		return nil, fmt.Errorf("incorrect token type, use access token")
+	}
+
 	return payload, nil
 }
