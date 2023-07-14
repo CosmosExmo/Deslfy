@@ -3,6 +3,9 @@ ENV_FILE := src/app.env
 include $(ENV_FILE)
 export
 
+new_migration:
+	migrate create -ext sql -dir src/db/migration/ -seq $(name)
+
 migrateup:
 	migrate -path src/db/migration -database "$(DB_SOURCE)" -verbose up
 
@@ -46,4 +49,4 @@ proto:
 redis:
 	docker run --name redis -p 6379:6379 -d redis:6.0.20-alpine3.18
 
-.PHONY: migrateup migratedown migrateup1 migratedown1 db_docs sqlc test server tidy proto
+.PHONY: migrateup migratedown migrateup1 migratedown1 db_docs sqlc test server tidy proto redis new_migration

@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "rpc_create_user.proto";
 import "rpc_update_user.proto";
 import "rpc_login_user.proto";
+import "rpc_verify_email.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "deslfy/pb";
@@ -29,7 +30,7 @@ service Deslfy {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "Use this api to crate a new user."
+      description: "Use this API to crate a new user."
       summary: "Create new user"
     };
   };
@@ -39,7 +40,7 @@ service Deslfy {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "Use this api to update existing user."
+      description: "Use this API to update existing user."
       summary: "Updates user"
     };
   };
@@ -49,8 +50,17 @@ service Deslfy {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "Use this api to login user and ge access & refresh token."
+      description: "Use this API to login user and ge access & refresh token."
       summary: "Login user"
+    };
+  };
+  rpc VerifyEmail (VerifyEmailRequest) returns (VerifyEmailResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/verify_email"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to verify user email."
+      summary: "Verify user email"
     };
   };
 }
