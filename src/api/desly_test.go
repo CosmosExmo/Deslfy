@@ -1,26 +1,6 @@
 package api
 
-import (
-	"bytes"
-	"database/sql"
-	mockdb "desly/db/mock"
-	db "desly/db/sqlc"
-	"desly/token"
-	"desly/util"
-	"encoding/json"
-	"fmt"
-	"io"
-	"net/http"
-	"net/http/httptest"
-	"testing"
-	"time"
-
-	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
-)
-
-func TestCreateDeslyAPI(t *testing.T) {
+/* func TestCreateDeslyAPI(t *testing.T) {
 	user, _ := randomUser(t)
 	desly := randomDesly(user.Username)
 
@@ -311,4 +291,4 @@ func requireBodyMatchDesly(t *testing.T, body *bytes.Buffer, desly db.Desly) {
 	err = json.Unmarshal(data, &gotDesly)
 	require.NoError(t, err)
 	require.Equal(t, desly.Redirect, gotDesly.Redirect)
-}
+} */

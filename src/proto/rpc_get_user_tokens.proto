@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb;
+
+import "user_token.proto";
+
+option go_package = "deslfy/pb";
+
+message GetUserTokensRequest {
+  
+}
+
+message GetUserTokensResponse {
+  repeated UserToken user_tokens = 1;
+}
+

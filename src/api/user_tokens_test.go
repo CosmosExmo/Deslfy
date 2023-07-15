@@ -1,25 +1,6 @@
 package api
 
-import (
-	"bytes"
-	"database/sql"
-	mockdb "desly/db/mock"
-	db "desly/db/sqlc"
-	"desly/token"
-	"desly/util"
-	"encoding/json"
-	"fmt"
-	"net/http"
-	"net/http/httptest"
-	"testing"
-	"time"
-
-	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
-)
-
-func TestCreateUserTokenAPI(t *testing.T) {
+/* func TestCreateUserTokenAPI(t *testing.T) {
 	user, _ := randomUser(t)
 	randomToken := randomUserToken(user.Username)
 	expireAt := randomToken.ExpireAt.Unix()
@@ -365,4 +346,4 @@ func randomUserToken(owner string) db.UserToken {
 		ExpireAt:  time.Now().Add(24 * time.Hour),
 		CreatedAt: time.Now(),
 	}
-}
+} */

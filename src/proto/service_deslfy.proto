@@ -7,23 +7,47 @@ import "rpc_create_user.proto";
 import "rpc_update_user.proto";
 import "rpc_login_user.proto";
 import "rpc_verify_email.proto";
+import "rpc_renew_access.proto";
+import "rpc_create_user_token.proto";
+import "rpc_get_user_token.proto";
+import "rpc_get_user_tokens.proto";
+import "rpc_delete_user_token.proto";
+import "rpc_create_desly.proto";
+import "rpc_get_desly.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "deslfy/pb";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
-    title: "Deslfy API";
-    version: "1.0";
+    title: "Deslfy API"
+    version: "1.0"
     contact: {
-      name: "Destek Hasar Çözümleri A.Ş.";
-      url: "https://destechhasar.com";
-      email: "destek@destechhasar.com";
-    };
-  };
+      name: "Destek Hasar Çözümleri A.Ş."
+      url: "https://destechhasar.com"
+      email: "destek@destechhasar.com"
+    }
+  }
+  security_definitions: {
+    security: {
+      key: "Bearer"
+      value: {
+        type: TYPE_API_KEY
+        in: IN_HEADER
+        name: "Authorization"
+        description: "Authentication token, prefixed by Bearer: Bearer <token>"
+      }
+    }
+  }
+  security: {
+    security_requirement: {
+      key: "Bearer"
+    }
+  }
 };
 
 service Deslfy {
+  //Users
   rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
     option (google.api.http) = {
       post: "/v1/users"
@@ -32,6 +56,8 @@ service Deslfy {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Use this API to crate a new user."
       summary: "Create new user"
+      security: {}
+      tags: "Users"
     };
   };
   rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
@@ -42,6 +68,8 @@ service Deslfy {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Use this API to update existing user."
       summary: "Updates user"
+      security: {}
+      tags: "Users"
     };
   };
   rpc LoginUser (LoginUserRequest) returns (LoginUserResponse) {
@@ -50,8 +78,10 @@ service Deslfy {
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      description: "Use this API to login user and ge access & refresh token."
+      description: "Use this API to login user and get access & refresh token."
       summary: "Login user"
+      security: {}
+      tags: "Users"
     };
   };
   rpc VerifyEmail (VerifyEmailRequest) returns (VerifyEmailResponse) {
@@ -61,6 +91,88 @@ service Deslfy {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       description: "Use this API to verify user email."
       summary: "Verify user email"
+      security: {}
+      tags: "Users"
+    };
+  };
+
+  //Token
+  rpc RenewAccess (RenewAccessRequest) returns (RenewAccessResponse) {
+    option (google.api.http) = {
+      post: "/v1/token/renew_access"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to renew access token with refresh token."
+      summary: "Renew Access Token"
+      security: {}
+      tags: "Token"
+    };
+  };
+
+  //User Tokens
+  rpc CreateUserToken (CreateUserTokenRequest) returns (CreateUserTokenResponse) {
+    option (google.api.http) = {
+      post: "/v1/user_tokens"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to create a new user token."
+      summary: "Create User Token",
+      tags: "User Tokens"
+    };
+  };
+  rpc GetUserToken (GetUserTokenRequest) returns (GetUserTokenResponse) {
+    option (google.api.http) = {
+      get: "/v1/user_tokens/{id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get info about a user token."
+      summary: "Get User Token"
+      tags: "User Tokens"
+    };
+  };
+  rpc GetUserTokens (GetUserTokensRequest) returns (GetUserTokensResponse) {
+    option (google.api.http) = {
+      get: "/v1/user_tokens"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get all user tokens associated for your account."
+      summary: "Get All User Tokens"
+      tags: "User Tokens"
+    };
+  };
+  rpc DeleteUserToken (DeleteUserTokenRequest) returns (DeleteUserTokenResponse) {
+    option (google.api.http) = {
+      delete: "/v1/user_tokens/{id}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to delete a user token."
+      summary: "Delete User Token"
+      tags: "User Tokens"
+    };
+  };
+
+  //Deslfy
+  rpc CreateDesly (CreateDeslyRequest) returns (CreateDeslyResponse) {
+    option (google.api.http) = {
+      post: "/v1/deslfy"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to deslfy a URL."
+      summary: "Create Desly",
+      tags: "Deslfy"
+    };
+  };
+  rpc GetDesly (GetDeslyRequest) returns (GetDeslyResponse) {
+    option (google.api.http) = {
+      get: "/v1/deslfy/{desly}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to get info about a desly."
+      summary: "Get Desly"
+      tags: "Deslfy"
     };
   };
 }

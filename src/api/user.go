@@ -1,18 +1,6 @@
 package api
 
-import (
-	"database/sql"
-	db "desly/db/sqlc"
-	"desly/token"
-	"desly/util"
-	"net/http"
-	"time"
-
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-)
-
-type createUserRequest struct {
+/* type createUserRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required,min=6,max=72"`
 	FullName string `json:"full_name" binding:"required"`
@@ -140,4 +128,4 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		User:                  newUserResponse(user),
 	}
 	ctx.JSON(http.StatusOK, rsp)
-}
+} */

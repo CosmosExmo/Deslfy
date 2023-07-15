@@ -19,20 +19,38 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Deslfy_CreateUser_FullMethodName  = "/pb.Deslfy/CreateUser"
-	Deslfy_UpdateUser_FullMethodName  = "/pb.Deslfy/UpdateUser"
-	Deslfy_LoginUser_FullMethodName   = "/pb.Deslfy/LoginUser"
-	Deslfy_VerifyEmail_FullMethodName = "/pb.Deslfy/VerifyEmail"
+	Deslfy_CreateUser_FullMethodName      = "/pb.Deslfy/CreateUser"
+	Deslfy_UpdateUser_FullMethodName      = "/pb.Deslfy/UpdateUser"
+	Deslfy_LoginUser_FullMethodName       = "/pb.Deslfy/LoginUser"
+	Deslfy_VerifyEmail_FullMethodName     = "/pb.Deslfy/VerifyEmail"
+	Deslfy_RenewAccess_FullMethodName     = "/pb.Deslfy/RenewAccess"
+	Deslfy_CreateUserToken_FullMethodName = "/pb.Deslfy/CreateUserToken"
+	Deslfy_GetUserToken_FullMethodName    = "/pb.Deslfy/GetUserToken"
+	Deslfy_GetUserTokens_FullMethodName   = "/pb.Deslfy/GetUserTokens"
+	Deslfy_DeleteUserToken_FullMethodName = "/pb.Deslfy/DeleteUserToken"
+	Deslfy_CreateDesly_FullMethodName     = "/pb.Deslfy/CreateDesly"
+	Deslfy_GetDesly_FullMethodName        = "/pb.Deslfy/GetDesly"
 )
 
 // DeslfyClient is the client API for Deslfy service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DeslfyClient interface {
+	// Users
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	LoginUser(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserResponse, error)
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
+	// Token
+	RenewAccess(ctx context.Context, in *RenewAccessRequest, opts ...grpc.CallOption) (*RenewAccessResponse, error)
+	// User Tokens
+	CreateUserToken(ctx context.Context, in *CreateUserTokenRequest, opts ...grpc.CallOption) (*CreateUserTokenResponse, error)
+	GetUserToken(ctx context.Context, in *GetUserTokenRequest, opts ...grpc.CallOption) (*GetUserTokenResponse, error)
+	GetUserTokens(ctx context.Context, in *GetUserTokensRequest, opts ...grpc.CallOption) (*GetUserTokensResponse, error)
+	DeleteUserToken(ctx context.Context, in *DeleteUserTokenRequest, opts ...grpc.CallOption) (*DeleteUserTokenResponse, error)
+	// Deslfy
+	CreateDesly(ctx context.Context, in *CreateDeslyRequest, opts ...grpc.CallOption) (*CreateDeslyResponse, error)
+	GetDesly(ctx context.Context, in *GetDeslyRequest, opts ...grpc.CallOption) (*GetDeslyResponse, error)
 }
 
 type deslfyClient struct {
@@ -79,14 +97,88 @@ func (c *deslfyClient) VerifyEmail(ctx context.Context, in *VerifyEmailRequest, 
 	return out, nil
 }
 
+func (c *deslfyClient) RenewAccess(ctx context.Context, in *RenewAccessRequest, opts ...grpc.CallOption) (*RenewAccessResponse, error) {
+	out := new(RenewAccessResponse)
+	err := c.cc.Invoke(ctx, Deslfy_RenewAccess_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *deslfyClient) CreateUserToken(ctx context.Context, in *CreateUserTokenRequest, opts ...grpc.CallOption) (*CreateUserTokenResponse, error) {
+	out := new(CreateUserTokenResponse)
+	err := c.cc.Invoke(ctx, Deslfy_CreateUserToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *deslfyClient) GetUserToken(ctx context.Context, in *GetUserTokenRequest, opts ...grpc.CallOption) (*GetUserTokenResponse, error) {
+	out := new(GetUserTokenResponse)
+	err := c.cc.Invoke(ctx, Deslfy_GetUserToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *deslfyClient) GetUserTokens(ctx context.Context, in *GetUserTokensRequest, opts ...grpc.CallOption) (*GetUserTokensResponse, error) {
+	out := new(GetUserTokensResponse)
+	err := c.cc.Invoke(ctx, Deslfy_GetUserTokens_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *deslfyClient) DeleteUserToken(ctx context.Context, in *DeleteUserTokenRequest, opts ...grpc.CallOption) (*DeleteUserTokenResponse, error) {
+	out := new(DeleteUserTokenResponse)
+	err := c.cc.Invoke(ctx, Deslfy_DeleteUserToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *deslfyClient) CreateDesly(ctx context.Context, in *CreateDeslyRequest, opts ...grpc.CallOption) (*CreateDeslyResponse, error) {
+	out := new(CreateDeslyResponse)
+	err := c.cc.Invoke(ctx, Deslfy_CreateDesly_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *deslfyClient) GetDesly(ctx context.Context, in *GetDeslyRequest, opts ...grpc.CallOption) (*GetDeslyResponse, error) {
+	out := new(GetDeslyResponse)
+	err := c.cc.Invoke(ctx, Deslfy_GetDesly_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DeslfyServer is the server API for Deslfy service.
 // All implementations must embed UnimplementedDeslfyServer
 // for forward compatibility
 type DeslfyServer interface {
+	// Users
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	LoginUser(context.Context, *LoginUserRequest) (*LoginUserResponse, error)
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
+	// Token
+	RenewAccess(context.Context, *RenewAccessRequest) (*RenewAccessResponse, error)
+	// User Tokens
+	CreateUserToken(context.Context, *CreateUserTokenRequest) (*CreateUserTokenResponse, error)
+	GetUserToken(context.Context, *GetUserTokenRequest) (*GetUserTokenResponse, error)
+	GetUserTokens(context.Context, *GetUserTokensRequest) (*GetUserTokensResponse, error)
+	DeleteUserToken(context.Context, *DeleteUserTokenRequest) (*DeleteUserTokenResponse, error)
+	// Deslfy
+	CreateDesly(context.Context, *CreateDeslyRequest) (*CreateDeslyResponse, error)
+	GetDesly(context.Context, *GetDeslyRequest) (*GetDeslyResponse, error)
 	mustEmbedUnimplementedDeslfyServer()
 }
 
@@ -105,6 +197,27 @@ func (UnimplementedDeslfyServer) LoginUser(context.Context, *LoginUserRequest) (
 }
 func (UnimplementedDeslfyServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
+}
+func (UnimplementedDeslfyServer) RenewAccess(context.Context, *RenewAccessRequest) (*RenewAccessResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RenewAccess not implemented")
+}
+func (UnimplementedDeslfyServer) CreateUserToken(context.Context, *CreateUserTokenRequest) (*CreateUserTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateUserToken not implemented")
+}
+func (UnimplementedDeslfyServer) GetUserToken(context.Context, *GetUserTokenRequest) (*GetUserTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserToken not implemented")
+}
+func (UnimplementedDeslfyServer) GetUserTokens(context.Context, *GetUserTokensRequest) (*GetUserTokensResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserTokens not implemented")
+}
+func (UnimplementedDeslfyServer) DeleteUserToken(context.Context, *DeleteUserTokenRequest) (*DeleteUserTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserToken not implemented")
+}
+func (UnimplementedDeslfyServer) CreateDesly(context.Context, *CreateDeslyRequest) (*CreateDeslyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDesly not implemented")
+}
+func (UnimplementedDeslfyServer) GetDesly(context.Context, *GetDeslyRequest) (*GetDeslyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDesly not implemented")
 }
 func (UnimplementedDeslfyServer) mustEmbedUnimplementedDeslfyServer() {}
 
@@ -191,6 +304,132 @@ func _Deslfy_VerifyEmail_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Deslfy_RenewAccess_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RenewAccessRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeslfyServer).RenewAccess(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Deslfy_RenewAccess_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeslfyServer).RenewAccess(ctx, req.(*RenewAccessRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Deslfy_CreateUserToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateUserTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeslfyServer).CreateUserToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Deslfy_CreateUserToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeslfyServer).CreateUserToken(ctx, req.(*CreateUserTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Deslfy_GetUserToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeslfyServer).GetUserToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Deslfy_GetUserToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeslfyServer).GetUserToken(ctx, req.(*GetUserTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Deslfy_GetUserTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserTokensRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeslfyServer).GetUserTokens(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Deslfy_GetUserTokens_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeslfyServer).GetUserTokens(ctx, req.(*GetUserTokensRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Deslfy_DeleteUserToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeslfyServer).DeleteUserToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Deslfy_DeleteUserToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeslfyServer).DeleteUserToken(ctx, req.(*DeleteUserTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Deslfy_CreateDesly_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateDeslyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeslfyServer).CreateDesly(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Deslfy_CreateDesly_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeslfyServer).CreateDesly(ctx, req.(*CreateDeslyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Deslfy_GetDesly_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDeslyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeslfyServer).GetDesly(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Deslfy_GetDesly_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeslfyServer).GetDesly(ctx, req.(*GetDeslyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Deslfy_ServiceDesc is the grpc.ServiceDesc for Deslfy service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -213,6 +452,34 @@ var Deslfy_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyEmail",
 			Handler:    _Deslfy_VerifyEmail_Handler,
+		},
+		{
+			MethodName: "RenewAccess",
+			Handler:    _Deslfy_RenewAccess_Handler,
+		},
+		{
+			MethodName: "CreateUserToken",
+			Handler:    _Deslfy_CreateUserToken_Handler,
+		},
+		{
+			MethodName: "GetUserToken",
+			Handler:    _Deslfy_GetUserToken_Handler,
+		},
+		{
+			MethodName: "GetUserTokens",
+			Handler:    _Deslfy_GetUserTokens_Handler,
+		},
+		{
+			MethodName: "DeleteUserToken",
+			Handler:    _Deslfy_DeleteUserToken_Handler,
+		},
+		{
+			MethodName: "CreateDesly",
+			Handler:    _Deslfy_CreateDesly_Handler,
+		},
+		{
+			MethodName: "GetDesly",
+			Handler:    _Deslfy_GetDesly_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

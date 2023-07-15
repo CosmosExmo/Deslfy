@@ -1,18 +1,6 @@
 package api
 
-import (
-	"desly/token"
-	"fmt"
-	"net/http"
-	"net/http/httptest"
-	"testing"
-	"time"
-
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/require"
-)
-
-func addAuthorization(
+/* func addAuthorization(
 	t *testing.T,
 	request *http.Request,
 	tokenMaker token.Maker,
@@ -104,4 +92,4 @@ func TestAuthMiddlewareAPI(t *testing.T) {
 			tc.checkResponse(t, recorder)
 		})
 	}
-}
+} */

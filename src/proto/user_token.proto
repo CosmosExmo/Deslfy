@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "deslfy/pb";
+
+message UserToken {
+  int32 id = 1;
+  string owner = 2;
+  string token = 3;
+  google.protobuf.Timestamp expire_at = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+

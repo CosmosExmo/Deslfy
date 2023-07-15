@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "deslfy/pb";
+
+message DeleteUserTokenRequest {
+  int32 id = 1;
+}
+
+message DeleteUserTokenResponse {
+  bool is_delete_successful = 1;
+}
+
