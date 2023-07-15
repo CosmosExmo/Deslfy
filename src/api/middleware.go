@@ -1,16 +1,6 @@
 package api
 
-import (
-	"desly/token"
-	"errors"
-	"fmt"
-	"net/http"
-	"strings"
-
-	"github.com/gin-gonic/gin"
-)
-
-const (
+/* const (
 	authorizationHeaderKey = "authorization"
 	authorizationTypeBearer = "bearer"
 	authorizationPayloadKey = "authorization_payload"
@@ -38,8 +28,8 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, errorResponse(err))
 			return
 		}
-		
-		accessToken := fields[1] 
+
+		accessToken := fields[1]
 		payload, err := tokenMaker.VerifyToken(accessToken)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, errorResponse(err))
@@ -55,4 +45,4 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 		ctx.Set(authorizationPayloadKey, payload)
 		ctx.Next()
 	}
-}
+} */

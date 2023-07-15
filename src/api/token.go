@@ -1,16 +1,6 @@
 package api
 
-import (
-	"database/sql"
-	"desly/token"
-	"desly/util"
-	"net/http"
-	"time"
-
-	"github.com/gin-gonic/gin"
-)
-
-type renewAccessTokenRequest struct {
+/* type renewAccessTokenRequest struct {
 	RefreshToken string `json:"refresh_token" binding:"required"`
 }
 
@@ -77,4 +67,4 @@ func (server *Server) renewAccessToken(ctx *gin.Context) {
 		AccessTokenExpiresAt:  accessPayload.ExpiredAt,
 	}
 	ctx.JSON(http.StatusOK, rsp)
-}
+} */

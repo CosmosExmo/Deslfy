@@ -1,23 +1,6 @@
 package api
 
-import (
-	"bytes"
-	"database/sql"
-	mockdb "desly/db/mock"
-	db "desly/db/sqlc"
-	"desly/util"
-	"encoding/json"
-	"io"
-	"net/http"
-	"net/http/httptest"
-	"testing"
-
-	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
-)
-
-func TestCreateUserAPI(t *testing.T) {
+/* func TestCreateUserAPI(t *testing.T) {
 	user, password := randomUser(t)
 
 	testCases := []struct {
@@ -247,4 +230,4 @@ func requireBodyMatchUser(t *testing.T, body *bytes.Buffer, user db.User) {
 	err = json.Unmarshal(data, &gotUser)
 	require.NoError(t, err)
 	require.Equal(t, newUserResponse(user), newUserResponse(gotUser))
-}
+} */

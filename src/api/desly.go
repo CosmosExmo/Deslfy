@@ -2,16 +2,12 @@ package api
 
 import (
 	"database/sql"
-	db "desly/db/sqlc"
-	"desly/token"
-	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-const deslyRedirectUrl = "deslfy.com/r/"
+/* const deslyRedirectUrl = "deslfy.com/r/"
 
 type deslyResponse struct {
 	ID        int32     `json:"id"`
@@ -98,7 +94,7 @@ func (server *Server) getDesly(ctx *gin.Context) {
 	response := newDeslyResponse(desly)
 
 	ctx.JSON(http.StatusOK, response)
-}
+} */
 
 type redirectRequest struct {
 	Desly string `uri:"desly" binding:"required,len=6"`

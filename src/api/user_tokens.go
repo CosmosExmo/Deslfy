@@ -1,15 +1,6 @@
 package api
 
-import (
-	db "desly/db/sqlc"
-	"desly/token"
-	"net/http"
-	"time"
-
-	"github.com/gin-gonic/gin"
-)
-
-type createUserTokenRequest struct {
+/* type createUserTokenRequest struct {
 	ExpireAt int64 `json:"expire_at" binding:"required"`
 }
 
@@ -55,7 +46,7 @@ func (server *Server) getUserToken(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
-	
+
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 
 	arg := db.GetUserTokenParams{
@@ -95,7 +86,7 @@ func (server *Server) deleteUserToken(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
-	
+
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 
 	arg := db.DeleteUserTokenParams{
@@ -109,4 +100,4 @@ func (server *Server) deleteUserToken(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, deleteSuccessResponse)
-}
+} */
