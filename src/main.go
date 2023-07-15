@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"desly/api"
 	db "desly/db/sqlc"
 	_ "desly/doc/statik"
 	"desly/gapi"
@@ -55,9 +56,10 @@ func main() {
 
 	taskDistributor := worker.NewRedisTaskDistributor(redisOpt)
 
-	go runTaskProcessor(config, redisOpt, store)
+	runTaskProcessor(config, redisOpt, store)
+	go runGrpcServer(config, store, taskDistributor)
 	go runGatewayServer(config, store, taskDistributor)
-	runGrpcServer(config, store, taskDistributor)
+	runGinServer(config, store)
 }
 
 func runTaskProcessor(config util.Config,redisOpt asynq.RedisClientOpt, store db.Store) {
@@ -83,7 +85,7 @@ func runDBMigration(migrationURL string, dbSource string) {
 	log.Info().Msg("db migrated successfully")
 }
 
-/* func runGinServer(config util.Config, store db.Store) {
+func runGinServer(config util.Config, store db.Store) {
 	server, err := api.NewServer(config, store)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Cannot create server")
@@ -93,7 +95,7 @@ func runDBMigration(migrationURL string, dbSource string) {
 	if err != nil {
 		log.Fatal().Err(err).Msg("Error starting server")
 	}
-} */
+}
 
 func runGrpcServer(config util.Config, store db.Store, taskDistributor worker.TaskDistributor) {
 	server, err := gapi.NewServer(config, store, taskDistributor)
@@ -153,7 +155,7 @@ func runGatewayServer(config util.Config, store db.Store, taskDistributor worker
 	swaggerHandler := http.StripPrefix("/api/docs/", http.FileServer(statikFS))
 	mux.Handle("/api/docs/", swaggerHandler)
 
-	listener, err := net.Listen("tcp", config.HTTPServerAddress)
+	listener, err := net.Listen("tcp", config.GRPCGatewayServerAddress)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot create listener")
 	}

@@ -3,7 +3,9 @@ package val
 import (
 	"fmt"
 	"net/mail"
+	"net/url"
 	"regexp"
+	"time"
 )
 
 var (
@@ -63,4 +65,28 @@ func ValidateEmailId(value int64) error {
 
 func ValidateSecretCode(value string) error {
 	return ValidateString(value, 32, 128)
+}
+
+func ValidateExpireAt(value time.Time) error {
+	if value.Before(time.Now()) {
+		return fmt.Errorf("must be after now")
+	}
+
+	return nil
+}
+
+func ValidateUserTokenId(value int32) error {
+	if value <= 0 {
+		return fmt.Errorf("must be a positive integer")
+	}
+
+	return nil
+}
+
+func ValidateRedirectUrl(value string) error {
+	if _, err := url.Parse(value); err != nil {
+		return fmt.Errorf("must be a valid URL")
+	}
+
+	return nil
 }

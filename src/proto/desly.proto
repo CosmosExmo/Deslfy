@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "deslfy/pb";
+
+message Desly {
+  int32 id = 1;
+  string redirect = 2;
+  string desly = 3;
+  string desly_url = 4;
+  int64 clicked = 5;
+  google.protobuf.Timestamp created_at = 6;
+  string owner = 7;
+}
+

@@ -21,6 +21,72 @@
     "application/json"
   ],
   "paths": {
+    "/v1/deslfy": {
+      "post": {
+        "summary": "Create Desly",
+        "description": "Use this API to deslfy a URL.",
+        "operationId": "Deslfy_CreateDesly",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateDeslyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreateDeslyRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Deslfy"
+        ]
+      }
+    },
+    "/v1/deslfy/{desly}": {
+      "get": {
+        "summary": "Get Desly",
+        "description": "Use this API to get info about a desly.",
+        "operationId": "Deslfy_GetDesly",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetDeslyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "desly",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Deslfy"
+        ]
+      }
+    },
     "/v1/token/renew_access": {
       "post": {
         "summary": "Renew Access Token",
@@ -51,7 +117,128 @@
           }
         ],
         "tags": [
-          "Deslfy"
+          "Token"
+        ],
+        "security": []
+      }
+    },
+    "/v1/user_tokens": {
+      "get": {
+        "summary": "Get All User Tokens",
+        "description": "Use this API to get all user tokens associated for your account.",
+        "operationId": "Deslfy_GetUserTokens",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetUserTokensResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "User Tokens"
+        ]
+      },
+      "post": {
+        "summary": "Create User Token",
+        "description": "Use this API to create a new user token.",
+        "operationId": "Deslfy_CreateUserToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateUserTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreateUserTokenRequest"
+            }
+          }
+        ],
+        "tags": [
+          "User Tokens"
+        ]
+      }
+    },
+    "/v1/user_tokens/{id}": {
+      "get": {
+        "summary": "Get User Token",
+        "description": "Use this API to get info about a user token.",
+        "operationId": "Deslfy_GetUserToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetUserTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "User Tokens"
+        ]
+      },
+      "delete": {
+        "summary": "Delete User Token",
+        "description": "Use this API to delete a user token.",
+        "operationId": "Deslfy_DeleteUserToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbDeleteUserTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "User Tokens"
         ]
       }
     },
@@ -85,8 +272,9 @@
           }
         ],
         "tags": [
-          "Deslfy"
-        ]
+          "Users"
+        ],
+        "security": []
       },
       "patch": {
         "summary": "Updates user",
@@ -117,8 +305,9 @@
           }
         ],
         "tags": [
-          "Deslfy"
-        ]
+          "Users"
+        ],
+        "security": []
       }
     },
     "/v1/users/login": {
@@ -151,8 +340,9 @@
           }
         ],
         "tags": [
-          "Deslfy"
-        ]
+          "Users"
+        ],
+        "security": []
       }
     },
     "/v1/users/verify_email": {
@@ -190,12 +380,29 @@
           }
         ],
         "tags": [
-          "Deslfy"
-        ]
+          "Users"
+        ],
+        "security": []
       }
     }
   },
   "definitions": {
+    "pbCreateDeslyRequest": {
+      "type": "object",
+      "properties": {
+        "redirect": {
+          "type": "string"
+        }
+      }
+    },
+    "pbCreateDeslyResponse": {
+      "type": "object",
+      "properties": {
+        "desly": {
+          "$ref": "#/definitions/pbDesly"
+        }
+      }
+    },
     "pbCreateUserRequest": {
       "type": "object",
       "properties": {
@@ -218,6 +425,88 @@
       "properties": {
         "user": {
           "$ref": "#/definitions/pbUser"
+        }
+      }
+    },
+    "pbCreateUserTokenRequest": {
+      "type": "object",
+      "properties": {
+        "expireAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "pbCreateUserTokenResponse": {
+      "type": "object",
+      "properties": {
+        "userToken": {
+          "$ref": "#/definitions/pbUserToken"
+        }
+      }
+    },
+    "pbDeleteUserTokenResponse": {
+      "type": "object",
+      "properties": {
+        "isDeleteSuccessful": {
+          "type": "boolean"
+        }
+      }
+    },
+    "pbDesly": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "redirect": {
+          "type": "string"
+        },
+        "desly": {
+          "type": "string"
+        },
+        "deslyUrl": {
+          "type": "string"
+        },
+        "clicked": {
+          "type": "string",
+          "format": "int64"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "owner": {
+          "type": "string"
+        }
+      }
+    },
+    "pbGetDeslyResponse": {
+      "type": "object",
+      "properties": {
+        "desly": {
+          "$ref": "#/definitions/pbDesly"
+        }
+      }
+    },
+    "pbGetUserTokenResponse": {
+      "type": "object",
+      "properties": {
+        "userToken": {
+          "$ref": "#/definitions/pbUserToken"
+        }
+      }
+    },
+    "pbGetUserTokensResponse": {
+      "type": "object",
+      "properties": {
+        "userTokens": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbUserToken"
+          }
         }
       }
     },
@@ -324,6 +613,29 @@
         }
       }
     },
+    "pbUserToken": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "expireAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
     "pbVerifyEmailResponse": {
       "type": "object",
       "properties": {
@@ -360,5 +672,18 @@
         }
       }
     }
-  }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "description": "Authentication token, prefixed by Bearer: Bearer \u003ctoken\u003e",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ]
 }

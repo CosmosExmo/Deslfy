@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb;
+
+import "desly.proto";
+
+option go_package = "deslfy/pb";
+
+message CreateDeslyRequest {
+  string redirect = 1;
+}
+
+message CreateDeslyResponse {
+  Desly desly = 1;
+}
+
