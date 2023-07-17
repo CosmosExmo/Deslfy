@@ -84,7 +84,7 @@ func ValidateUserTokenId(value int32) error {
 }
 
 func ValidateRedirectUrl(value string) error {
-	if _, err := url.Parse(value); err != nil {
+	if _, err := url.ParseRequestURI(value); err != nil {
 		return fmt.Errorf("must be a valid URL")
 	}
 

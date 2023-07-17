@@ -1,5 +1,19 @@
 package api
 
+import (
+	"database/sql"
+	mockdb "desly/db/mock"
+	db "desly/db/sqlc"
+	"desly/util"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
+)
+
 /* func TestCreateDeslyAPI(t *testing.T) {
 	user, _ := randomUser(t)
 	desly := randomDesly(user.Username)
@@ -191,6 +205,16 @@ func TestGetDeslyAPI(t *testing.T) {
 	}
 }
 
+func requireBodyMatchDesly(t *testing.T, body *bytes.Buffer, desly db.Desly) {
+	data, err := io.ReadAll(body)
+	require.NoError(t, err)
+
+	var gotDesly db.Desly
+	err = json.Unmarshal(data, &gotDesly)
+	require.NoError(t, err)
+	require.Equal(t, desly.Redirect, gotDesly.Redirect)
+} */
+
 func TestRedirectAPI(t *testing.T) {
 	user, _ := randomUser(t)
 	desly := randomDesly(user.Username)
@@ -283,12 +307,16 @@ func randomDesly(owner string) db.Desly {
 	}
 }
 
-func requireBodyMatchDesly(t *testing.T, body *bytes.Buffer, desly db.Desly) {
-	data, err := io.ReadAll(body)
+func randomUser(t *testing.T) (user db.User, password string) {
+	password = util.RandomString(6)
+	hashedPassword, err := util.HashPassword(password)
 	require.NoError(t, err)
 
-	var gotDesly db.Desly
-	err = json.Unmarshal(data, &gotDesly)
-	require.NoError(t, err)
-	require.Equal(t, desly.Redirect, gotDesly.Redirect)
-} */
+	user = db.User{
+		Username:       util.RandomString(10),
+		HashedPassword: hashedPassword,
+		FullName:       util.RandomString(6),
+		Email:          util.RandomEmail(),
+	}
+	return
+}

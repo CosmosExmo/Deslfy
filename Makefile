@@ -23,6 +23,7 @@ db_docs:
 
 mock:
 	cd src/; mockgen -package mockdb -destination db/mock/store.go desly/db/sqlc Store
+	cd src/; mockgen -package mockwk -destination worker/mock/distributor.go desly/worker TaskDistributor
 
 sqlc:
 	cd src/; sqlc generate

@@ -3,7 +3,7 @@ INSERT INTO verify_emails (username, email, secret_code)
 VALUES ($1, $2, substr(gen_random_uuid()::text, 1, 32))
 RETURNING *;
 
--- name: UpdateVefiyEmail :one
+-- name: UpdateVerifyEmail :one
 UPDATE verify_emails
 SET is_used = TRUE
 WHERE
