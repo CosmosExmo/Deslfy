@@ -24,7 +24,7 @@ type Querier interface {
 	GetUserToken(ctx context.Context, arg GetUserTokenParams) (UserToken, error)
 	GetUserTokens(ctx context.Context, owner string) ([]UserToken, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
-	UpdateVefiyEmail(ctx context.Context, arg UpdateVefiyEmailParams) (VerifyEmail, error)
+	UpdateVerifyEmail(ctx context.Context, arg UpdateVerifyEmailParams) (VerifyEmail, error)
 }
 
 var _ Querier = (*Queries)(nil)

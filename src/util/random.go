@@ -29,3 +29,7 @@ func RandomInt(min, max int32) int32 {
 func RandomEmail() string {
 	return fmt.Sprintf("%s@email.com", RandomString(10))
 }
+
+func RandomURL() string {
+	return fmt.Sprintf("https://%s.com", RandomString(5))
+}
