@@ -24,6 +24,16 @@ spec:
             name: deslfy-api-service
             port:
               number: 80
+  - host: "api.grpc.deslfy.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: deslfy-api-service
+            port:
+              number: 90
   - host: "deslfy.com"
     http:
       paths:
@@ -33,7 +43,7 @@ spec:
           service:
             name: deslfy-api-service
             port:
-              number: 80
+              number: 81
   tls:
   - hosts:
     - deslfy.com
