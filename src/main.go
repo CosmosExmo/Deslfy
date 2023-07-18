@@ -50,12 +50,27 @@ func main() {
 
 	store := db.NewStore(conn)
 
+	host := config.RedisServerAddress
+	port := ""
+	redisAddr := host + ":" + port;
+
+	//Get the k8n cluster redis address and port
+	if(config.Environment == util.EnvironmentProduction) {
+		if os.Getenv("REDIS_HOST") != "" {
+			host = os.Getenv("REDIS_HOST")
+		}
+		if string(os.Getenv("REDIS_PORT")) != "" {
+				port = string(os.Getenv("REDIS_PORT"))
+		}
+		redisAddr = host + ":" + port;
+	}
+
 	redisOpt := asynq.RedisClientOpt{
-		Addr: config.RedisServerAddress,
+		Addr: redisAddr,
 	}
 
 	taskDistributor := worker.NewRedisTaskDistributor(redisOpt)
-
+	
 	runTaskProcessor(config, redisOpt, store)
 	go runGrpcServer(config, store, taskDistributor)
 	go runGatewayServer(config, store, taskDistributor)
@@ -91,6 +106,7 @@ func runGinServer(config util.Config, store db.Store) {
 		log.Fatal().Err(err).Msg("Cannot create server")
 	}
 
+	log.Info().Msgf("start HTTP GIN server")
 	err = server.Start(config.HTTPServerAddress)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Error starting server")

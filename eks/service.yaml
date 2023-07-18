@@ -19,3 +19,16 @@ spec:
       port: 90
       targetPort: 9090
   type: ClusterIP
+---
+apiVersion: v1
+kind: Service        
+metadata:
+  name: deslfy-redis-service
+spec:
+  selector:
+    app: deslfy-redis
+    type: db
+  ports:
+  - port: 6379
+    targetPort: 6379
+  type: ClusterIP
