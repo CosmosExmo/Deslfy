@@ -36,7 +36,7 @@ func main() {
 		log.Fatal().Err(err).Msg("cannot load config")
 	}
 
-	if config.Environment == "development" {
+	if config.Environment == util.EnvironmentDevelopment {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	}
 
@@ -56,11 +56,11 @@ func main() {
 
 	//Get the k8n cluster redis address and port
 	if(config.Environment == util.EnvironmentProduction) {
-		if os.Getenv("REDIS_HOST") != "" {
-			host = os.Getenv("REDIS_HOST")
+		if val := os.Getenv("REDIS_HOST"); val != "" {
+			host = val
 		}
-		if string(os.Getenv("REDIS_PORT")) != "" {
-				port = string(os.Getenv("REDIS_PORT"))
+		if val := string(os.Getenv("REDIS_PORT")); val != "" {
+				port = val
 		}
 		redisAddr = host + ":" + port;
 	}
@@ -80,7 +80,7 @@ func main() {
 func runTaskProcessor(config util.Config,redisOpt asynq.RedisClientOpt, store db.Store) {
 	mailer := mail.NewEmailSender(config.EmailSenderName, config.EmailSenderAddress, config.EmailSenderPassword)
 	taskProcessor := worker.NewRedisTaskProcessor(redisOpt, store, mailer)
-	log.Info().Msg("start task processor")
+	log.Info().Msgf("start task processor at: %s", redisOpt.Addr)
 	err := taskProcessor.Start()
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to start task processor")
