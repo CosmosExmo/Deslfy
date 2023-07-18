@@ -6,6 +6,11 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	EnvironmentProduction  = "production"
+	EnvironmentDevelopment = "development"
+)
+
 type Config struct {
 	Environment              string        `mapstructure:"ENVIRONMENT"`
 	DBDriver                 string        `mapstructure:"DB_DRIVER"`
