@@ -96,7 +96,7 @@ prod_build_image:
   script:
     - mv env_files/app.env src/
     - cd src/;
-    - docker build -t $AWS_REGISTRY_URI:latest -t $AWS_REGISTRY_URI:{$CI_COMMIT_TAG} -t $AWS_REGISTRY_URI:${CI_COMMIT_SHORT_SHA} .
+    - docker build -t $AWS_REGISTRY_URI:latest -t $AWS_REGISTRY_URI:${CI_COMMIT_TAG} -t $AWS_REGISTRY_URI:${CI_COMMIT_SHORT_SHA} .
     - aws ecr get-login-password | docker login -u AWS $AWS_REGISTRY_URI --password-stdin
     - docker push -a $AWS_REGISTRY_URI
   tags:
