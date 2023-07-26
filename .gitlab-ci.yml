@@ -76,7 +76,8 @@ prod_prepare_env_file:
       - env_files
   tags:
     - deploy-runner
-  when: manual
+  only:
+    - tags
 
 prod_build_image:
   stage: Build
@@ -100,7 +101,8 @@ prod_build_image:
     - docker push -a $AWS_REGISTRY_URI
   tags:
     - deploy-runner
-  when: manual
+  only:
+    - tags
 
 prod_deploy_image:
   stage: Build
@@ -126,4 +128,5 @@ prod_deploy_image:
       kubectl apply -f eks/ingress.yaml
   tags:
     - deploy-runner
-  when: manual
+  only:
+    - tags
