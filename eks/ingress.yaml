@@ -64,5 +64,5 @@ spec:
               number: 90
   tls:
   - hosts:
-    - deslfy.com
+    - grpc.deslfy.com
     secretName: deslfy-api-cert

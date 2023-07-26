@@ -168,8 +168,8 @@ func runGatewayServer(config util.Config, store db.Store, taskDistributor worker
 		log.Fatal().Err(err).Msg("cannot load api_docs statik files")
 	}
 
-	swaggerHandler := http.StripPrefix("/api/docs/", http.FileServer(statikFS))
-	mux.Handle("/api/docs/", swaggerHandler)
+	swaggerHandler := http.StripPrefix("/docs/", http.FileServer(statikFS))
+	mux.Handle("/docs/", swaggerHandler)
 
 	listener, err := net.Listen("tcp", config.GRPCGatewayServerAddress)
 	if err != nil {
